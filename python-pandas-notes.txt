@@ -1,0 +1,3666 @@
+Install Anaconda3
+======================
+- google type: install anaconda
+- install the .exe file.
+- select all option as default. do not need to customize any settings.
+- check the installation if success.
+- start menu -> Anaconda prompt
+(base) <path of installation>
+
+- (base): denotes the root environment where the complete anaconda distro is installed.
+- This is the default environment which comes pre-packaged with 100+ various packages.
+- Using this base environment may not be good idea where we want to work on various version of packages. in that case create a new environment and install the necessary packages.
+
+Create Conda Environment and install pandas/jupyter notebook
+==============================================================
+- A python envirnmnet is an isolated sandbox, essentially its a specific folder in our system where we can install specific version of python packages and libraries. Each of these envirnments are separate than other.
+
+ex: in case we want to try a new version of pundas without distrubing the current running codes, we will be able to create a conda environment and install there.
+
+- Open the Anaconda Prompt from windows start menu
+
+// displayes all the available environments. '*' indicates the active env.
+(base) <path> > conda info --envs
+
+
+// update conda environment manager. shows the version details to be installed. then press 'y' to proceed forward and install
+(base) <path> > conda update conda
+
+//Now we are ready to create a new conda env. press 'y' to proceed forward
+(base) <path> > conda create -name pandas_playground
+
+(base) <path> > conda info --envs
+(base) <path> > conda activate pandas_playground
+
+(pandas_playground) <path of the new env.> >
+
+// this is a new env, with no package installed on it.
+// install the below packages
+// bottleneck and numexpr - pandas used this to optimize speed, if installed
+// mathplotlib - used to create some cool graphs
+// shows the big list of libs to be installed.. incl. the dependent libs as well, on which pandas depend on. press 'y' to proceed forward and install
+
+(pandas_playground) <path of the new env.> > conda pandas jupyter bottleneck numexpr mathplotlib
+
+
+// update any specific package
+(pandas_playground) <path of the new env.> > conda update pandas
+
+// update all the package for the env.
+(pandas_playground) <path of the new env.> > conda update -all
+
+// if we need to remove env. with all its packages, deactive the env first, we want to remove. 
+// shows the details of packages to be removed. press 'y' to proceed forward
+(base) <path of the new env.> > conda deactivate 
+(base) <path> > condaremove --name pandas_playground --all
+
+Start Jupyter from your Conda Environment
+===========================================
+- This steps needs to followed every daya when we start python coding exercse on jupyter notebook
+- best practice to analyze the datasets, is to keep your ipynb i.e. jupyter notebook on the same directory where all the datasets are kept, mainly to avoid typing the complete path.
+
+- open Anaconda Prompt from windows menu.
+> conda info --envs
+
+> conda activate pandas_playground
+
+// to start jupyter. this will launch the server and also open the jupyter page
+> jupyter notebook
+
+// now navigate to the same directory where we have kept all of our datasets and crate a new notebook (new -> python3 -> rename the notebook)
+
+- after we are done for the day, shutdown the notebook.
+- go to running tab and hit 'shutdown'. close the notebook browser
+- closing the notebook browser does not close the jupyter server.
+- Now go the Conda prompt, and type ctrl+c (twice), to shutdowsn the jupyter server.
+
+Code Cell Execution
+=====================
+Cell type
+----------
+Code: to write code and <shift+enter> to run the code
+Markedup(text): to write comments and <shift+enter> does not run anything
+
+Cell mode of execution
+------------------------
+code execution mode: 
+- mode to execute the code. the cell gets highlighted with 'green' color.
+
+notebook command mode: 
+- to use notebook level commands like useing some keyboard shortcuts for notebook functions. the cell gets highlighted with 'blue' color.
+- press 'Escape' key on your keyboard to switch from 'code execution mode' to 'notebook command mode'
+
+
+Run Cell
+==========
+<shift+enter> : execute the code block on the current cell and move to the next cell.
+
+<ctrl+enter>: execute the code block on the current cell but does not mode to the next cell
+
+py doc method/functions
+==============================
+shift+tab(twice)
+- move the cursor within the parenthesis and hit shift+tab(twice). pops up with detail of args for the method
+
+
+ 
+Keyboard shortcuts
+======================
+- to use the shortcuts for notebook level operatons, first switch to 'notebook command mode' using 'Escape' key on your keyboard
+
+- 'h' for help
+- 'dd' to delete
+- 'b' to create new cells
+
+Import libraries into Jupyter
+===============================
+import pandas as pd
+import numpy as np
+
+pd.__version__
+
+
+Series in pandas
+================
+from python list
+------------------
+ice_cream = ['choco', 'vanilla']
+pd.Series(ice_cream)
+
+0 choco
+1 vanilla
+dtype: object
+
+lottery = [4, 8, 15, 16]
+pd.Series(lottery)
+0 4
+1 8
+2 15
+3 16
+dtype: int64
+
+
+from python dictonary
+----------------------
+webster = {'banana':'fruit', 'cyan': 'color'}
+pd.Series(webseter)
+
+banana	fruit
+cyan	color
+dtype: object
+
+
+attributes of Series
+----------------------
+about_me = ["Smart", "Handsome", "Charming", "Brilliant", "Humble"]
+s = pd.Series(about_me)
+
+0	Smart
+1	Handsome
+2	Charming
+3	Brilliant
+4	Humble
+dtype: object
+
+# does not need () since values is attribute and not method.
+# returns array of elements
+s.values
+
+array(["Smart", "Handsome", "Charming", "Brilliant", "Humble"])
+
+# prints the index details
+s.index
+RangeIndex(start=0, stop=5, step=1)
+
+# type of Series
+s.dtype
+dtype('o') // short for object
+
+methods of Series
+----------------------
+
+prices = [2.99, 4.45, 1.36]
+s = pd.Series(prices)
+
+0	2.99
+1	4.45
+2	1.36
+dtype: float64
+
+
+s.sum()
+8.8
+
+# multiply each elements
+s.product()
+
+# avg of the series
+s.mean()
+2.9333333336
+
+params & args
+----------------
+- use Series to even create a dict like data structure having multiple same keys, which is not possible in dict
+
+fruits = ['apple', 'banana', 'grape', 'plum', 'orange']
+weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'monday']
+
+pd.Series(fruits, weekdays)
+pd.Series(data = fruits, index = weekdays) # no. of data and index must be same else pandas will throw error
+monday	apple
+tuesday	banana
+wednesday	grape
+thursday	plum
+monday	orange
+
+dtype: object
+
+note: 2 keys with 'monday'
+
+Import data into Series with the read_csv method
+------------------------------------------------
+- by default read_csv() returns a dataframe object
+- to convert to a Series object use squeeze = True
+
+pd.<tab> -> to look for all available methods/attributes
+
+pd.read_csv()  -> move the cursor within the parenthesis and hit shift+tab(twice). pops up with detail of args of read_csv()
+
+pd.read_csv("pokemon.csv")
+	Pokemon		Type
+0	abc			grass
+1	xyz			Fire
+
+# to select columns
+pd.read_csv("pokemon.csv", usecols = ['Pokemon'])
+
+# to convert to a Series and shows only 10 records (first 5 + last 5 records). at the end, shows name (i.e. the col name),length and dtype of Series
+pd.read_csv("pokemon.csv", usecols = ['Pokemon'], squeeze = True)
+
+pokemon = pd.read_csv("pokemon.csv", usecols = ['Pokemon'], squeeze = True)
+
+pokemon
+
+0	abc
+1	xyz
+..
+..
+
+
+
+.head() & .tail() methods
+----------------------------
+- by default without any args, it returns first 5 records.
+pokemon.head()
+
+pokemon.head(1)
+pokemon.head(5)
+pokemon.head(6)
+
+- by default without any args, it returns last 5 records.
+pokemon.tail()
+pokemon.tail(1)
+pokemon.tail(6)
+
+python built-in functions
+--------------------------
+# returns the length
+len(pokemon)
+721
+
+type(pokemon)
+pandas.core.series.Series
+
+# list down all the attributes available on the series. double-click on the left side of the jupyter cell to collapse the long list
+dir(pokemon)
+
+# sort
+sorted(pokemon)
+
+# generate dictionary from the pokemon Series
+dict(pokemon)
+
+max(pokemon)
+min(pokemon)
+
+More Series attributes
+-----------------------
+pokemon = pd.read_csv("pokemon.csv", usecols = ['Pokemon'], squeeze = True)
+google = pd.read_csv("google_stock_proce.csv", squeeze = True)
+
+pokemon.values
+google.values
+
+pokemon.index
+google.index
+
+pokemon.dtype
+dtype('o')
+
+google.dtype
+dtype('float64')
+
+# returns true/false if the series has all unique elements
+pokemon.is_unique
+True
+
+$ returns a tuple with no. of rows vs no. of cols. it 
+pokemon.shape
+(721,)
+
+
+.sort_values() method
+-------------------------
+- returns a new series with sorted values.
+pokemon.sort_values()
+
+- chain of methods
+pokemon.sort_values().head()
+
+- params of sort_values. keep the cursor within () and hit tab
+- default ascending to True
+pokemon.sort_values(ascending = False).tail()
+
+inplace parameter
+--------------------
+- override the original series
+
+pokemon = pd.read_csv("pokemon.csv", usecols = ['Pokemon'], squeeze = True)
+google = pd.read_csv("google_stock_proce.csv", squeeze = True)
+
+# assign the returned sorted series to google again.
+$ usual way of re-assignment
+google = google.sort_values()
+
+# the same can be done using implace = True param.
+# change the same series object
+google.sort_values(ascending = False, inplace = True)
+
+google.sort_index(ascending = False, inplace = True)
+
+python's in Keyword
+------------------------
+3 in [1,2,3,4]
+True
+
+100 in [1,2,3,4]
+False
+
+# by-default, it checks in index of pokemon series
+"Bulbasur" in pokemon
+False
+
+"Bulbasur" in pokemon.values
+True
+
+exract values by index position
+---------------------------------
+pokemon = pd.read_csv("pokemon.csv", usecols = ['Pokemon'], squeeze = True)
+google = pd.read_csv("google_stock_proce.csv", squeeze = True)
+
+- use python slice operatons on series to extract elements using index positions
+
+- extract one item
+pokemon[0]
+
+- extract multiple items
+pokemon[[100, 200, 300]]
+
+- extract using a range. extracts 50th upto 100
+pokemon[50:101]
+
+pokemon[:101]
+pokemon[-20:]
+
+
+exract values by index label (index_col = 'Pokemon')
+-------------------------------------------------------
+- we can choose some column of the source file to become the index
+- hence we can access the series using the index label name as well as index position
+
+pokemon = pd.read_csv("pokemon.csv", index_col = 'Pokemon', squeeze = True)
+
+Pokemon		
+abc			Grass
+xyz			Fire
+Name: Type, dtype: object
+
+pokemon[0]
+'Grass'
+
+pokemon['abc']
+'Grass'
+
+pokemon[['abc', 'xyz']]
+
+.get() method on a Series
+--------------------------
+- pokemon.get(key, default=None)
+- returns value if found else return the default value.
+
+pokemon = pd.read_csv("pokemon.csv", index_col = 'Pokemon', squeeze = True)
+
+pokemon.sort_index(inplace = True)
+pokemon.head(3)
+
+Pokemon
+abc		Grass
+xyz		Fire
+mno		Dark
+Name: Type, dtype: object
+
+pokemon.get(0)
+'Grass'
+
+pokemon.get('xyz')
+'Fire'
+
+pokemon.get([0,2])
+Pokemon
+abc		Grass
+mno		Dark
+Name: Type, dtype: object
+
+pokemon.get(key = 'ggg', default = 'Not Found')
+'Not Found'
+
+pokemon.get(key = 'abc', default = 'Not Found')
+'Grass'
+
+- BUT for list, if any of the key not found, it will return 'Not Found'
+pokemon.get(key = ['abc','ggg'], default = 'Not Found')
+'Not Found'
+
+math mothods of Series
+-------------------------
+google = pd.read_csv("google_stock_proce.csv", squeeze = True)
+
+-- diff between count and len is, count() ignores invalid values (ex: null). while len return the actual length of Series
+
+google.count()
+len(google)
+
+- most frequent occured value
+google.mode()
+
+- statictical summary of the series. count, mean, std deviation, min, percentile, max.
+google.describe()
+
+.idmax() and idmin()
+-----------------------
+google = pd.read_csv("google_stock_proce.csv", squeeze = True)
+
+google.max()
+782.119191
+
+- returns the index storing the max value
+google.idmax()
+3011
+
+google[google.idmax()]
+782.119191
+
+google.min()
+49.737373
+
+- returns the index storing the min value
+google.idmin()
+11
+
+google[google.idmin()]
+49.737373
+
+.value_counts() method
+-------------------------
+- very useful to create pivot table
+
+pokemon = pd.read_csv("pokemon.csv", index_col = 'Pokemon', squeeze = True)
+
+Pokemon		
+abc			Grass
+xyz			Fire
+Name: Type, dtype: object
+
+- returns a new series with value and its no. of counts
+pokemon.value_counts()
+
+abc		105
+xyz		93
+..
+..
+Name: Type, dtype: int64
+
+pokemon.value_counts().sum()
+721
+
+pokemon.count()
+721
+
+pokemon.value_counts(ascending = True)
+
+.apply() method
+-------------------
+- use the apply() method to invoke a function on every Series values.
+- returns a new series after applying the function.
+
+google = pd.read_csv("google_stock_proce.csv", squeeze = True)
+
+def classify_performance(number): 
+	if number < 300:
+		return 'OK'
+	elif number >= 300 and number < 650:
+		return 'SATISFACTORY'
+	else
+		return 'INCREADIBLE'
+
+google.apply(classify_performance)
+0	OK
+2	OK
+..
+..
+301	SATISFACTORY
+..
+..
+3009	INCREADIBLE
+
+- using inline function with lambda
+google.apply(lamnda stock_price : stock_price + 1)
+
+.map() method
+-----------------
+- maps the values to another collection of data
+
+pokemon_names = pd.read_csv("pokemon.csv", usecols = ['Pokemon'], squeeze = True)
+
+pokemon_names.head(3)
+0	Bulbasur
+1	Ivyasur
+2	Venusuar
+Name: Pokemon, dtype: object
+
+- represent names as index and types as values
+pokemon_types = pd.read_csv("pokemon.csv", index_col = 'Pokemon', squeeze = True)
+pokemon_types.head(3)
+
+Pokemon
+Bulbasur	Grass
+Ivyasur	Grass
+Venusuar	Fire
+Name: Type, dtype: object
+
+- maps the values to another 
+pokemon_names.map(pokemon_types)
+0	Grass
+1	Grass
+2	Fire
+
+to_dict()
+-------------
+- convert the Series to dictionary
+
+pokemon_types = pd.read_csv("pokemon.csv", index_col = 'Pokemon', squeeze = True).to_dict()
+
+{
+'Bulbasur','Grass',
+'Ivyasur','Grass',
+'Venusuar','Fire'
+}
+
+pandas dataframe
+===========================
+https://pandas.pydata.org/pandas-docs/stable/getting_started/dsintro.html#dataframe
+
+
+- dataframe converts integer data into float/
+
+basic methods of dataframe:
+----------------------------
+.info()
+.columns
+.dtypes
+.index
+
+bigmac = pd.read_csv("bigmac.csv", parse_dates=["Date"])
+bigmac.info()
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 652 entries, 0 to 651
+Data columns (total 3 columns):
+ #   Column               Non-Null Count  Dtype         
+---  ------               --------------  -----         
+ 0   Date                 652 non-null    datetime64[ns]
+ 1   Country              652 non-null    object        
+ 2   Price in US Dollars  652 non-null    float64      
+
+bigmac.dtypes
+dtypes: datetime64[ns](1), float64(1), object(1)
+memory usage: 15.4+ KB
+
+bigmac.columns
+Index(['Date', 'Country', 'Price in US Dollars'], dtype='object')
+
+bigmac.index
+RangeIndex(start=0, stop=652, step=1)
+
+- shows all unique values for each columns
+bigmac.nunique()
+Date                    12
+Country                 58
+Price in US Dollars    330
+dtype: int64
+
+
+common methods of Series and Dataframes
+==========================================
+- read_csv returns a dataframe with all the columns of the csv file.
+- the dataframe has a index column.
+
+import pandas as pd
+
+nba  = pd.read_csv("nba.csv")
+nba.head(2)
+
+nba.index
+RangeIndex(start=0, stop-458, step=1)
+
+- values on Dataframes returns the underlying numpy ndarray object which actually stores the data.
+nba.values
+
+- returns a tuple of (no. of rows, no. of cols)
+nba.shape
+
+- shows the type of each columns of dataframe. object is panda's internal storage tyoe for String
+nba.dtypes
+Name	object
+Team	object
+Number	float64
+..
+..
+
+- returns the count of each data type columns
+nba.dtypes.value_counts()
+object		5
+float64		4
+
+- list of all columns
+nba.columns
+
+- given details abouts the columns and rows
+nba.axes
+[RangeIndex(start=0, stop=458, step=1), Index(['Name', 'Team', 'Number', 'Position'])]
+
+- shows an info about the data framse like. the RangeIndex, columns, how many columns has null or non-null balues along with their data types
+nba.info()
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 458 entries, 0 to 457
+Data columns (total 9 columns):
+# 	Columns		Non-Null	Count		Dtype
+--	-------		--------	-----		-----
+0	Name		457			non-null	object
+1	Team		373			non-null	object
+
+dtypes: float64(4), object(5)
+memory usage: 32.3 Kb
+
+Differences between shared
+==============================
+rev = pd.read_csv("revenue.csv")
+
+	Date	NY	LA
+0	1/1/16	98	87
+1	1/2/16	67	89
+..
+..
+
+rev = pd.read_csv("revenue.csv", index_col = "Date")
+
+		NY	LA
+Date	
+1/1/16	98	87
+1/2/16	67	89
+..
+.
+
+s = pd.Series([1,2,3])
+s.sum()
+6
+
+- by default sum() sums up the column values from vertically starting from 1st index to the last index.
+- optional arg. axis = "index" OR axis = "columns", 
+- default is axis = "index"/axis = 0
+- axis = "columns"/ axis = 1 -> sums up the column values from left to right i.e. through columns.
+
+rev.sum()
+NY		6578
+LA		8979
+..
+dtype: int64
+
+
+rev.sum(axis = "index") OR rev.sum(axis = 0)
+NY		6578
+LA		8979
+..
+dtype: int64
+
+rev.sum(axis = "columns") OR rev.sum(axis = 1)
+
+Date
+1/1/16		1650
+1/2/16		2678
+..
+dtype: int64
+
+select column from DataFrame
+==============================
+- whenever we selecta single columns from a dataframe, it returns a Series
+
+nba = pd.read_csv("nba.csv")
+nba.head(2)
+
+nba.Name
+0	abc
+1	xyz
+..
+..
+
+nba.Number
+nba.Salary
+
+- another way to extract column
+nba["Name"]
+
+type(nba["Name"])
+pandas.core.series.Series
+
+- when we extract 2 or more column, pandas return Dataframe object
+nba["Name", "Team"]
+
+select = ["Salary", "Name", "Team"]
+nba[select]
+
+
+Add a new column into Dataframe
+----------------------------------
+- be careful, if the column already exists, it will get overridden.
+
+- add a new columns "Sport" with value as "Basketball" for all columns value
+- by default gets added to the very end
+nba["Sport"] = "Basketball"
+nba.head(3)
+
+nba["League"] = "National Basketball Association"
+nba.head(3)
+
+- .insert(loc, column, value, allow_duplicate=False) 
+- modifies the original dataframe
+- loc is index position
+nba = pd.read_csv("nba.csv")
+nba.head(2)
+
+nba.insert(loc = 3, column = "Sport", value = "Basketball")
+
+Broadcasting Operations
+---------------------------
+- similar to apply method on Series. which to apply a operation on each element.
+
+- add 5 to each element in the Age Series
+nba["Age"].add(5)
+nba["Age"] + 5
+
+- substract 5000
+nba["Salary"].sub(5000)
+nba["Salary"] - 5000
+
+- multiply 0.45392
+nba["Weight"].mul(0.45392)
+nba["Weight"] * 0.45392
+
+- add a new column and assign the trandformed column.
+nba["Weight in Kilograms"] = nba["Weight"].mul(0.45392)
+
+nba["Salary"].div(1000)
+
+.value_count()
+---------------
+- value_count() can only be applied to a Series
+- returns how many times each column value occures
+
+nba["Team"].value_counts()
+nba["Player Position"].value_counts()
+SG 	102
+PF	100
+..
+..
+
+- to get the most popular
+nba["Player Position"].value_counts().head(1)
+
+
+drop rows with null values
+-------------------------------
+- by default, Dataframe add a row at the end with null (NaN) to all the column values.
+nba = pd.read_csv("nba.csv")
+nba.tail(1)
+
+- drop the rows only if all the column value is NaN
+nba.dropna(how = "all")
+
+- drop the rows if any of the column value is NaN
+nba.dropna(how = "any")
+
+- drop the entire column if there is any column value is found to be NaN
+nba.dropna(axis = 1) OR nba.dropna(axis = "columns")
+
+- remove rows only if NaN is found on a selected set of columns
+nba.dropna(subset = ["Salary", "College"])
+
+Fill in null values with .fillna()
+------------------------------------
+- fill any columns NaN value with 0 irrespective of the column data type
+- hence it is better to select a specific column which is a Series and then replace NaN with 0 or any other value
+nba.fillna(0)
+
+nba["College"].fillna("No College", inplace = True)
+
+.astype method
+-----------------
+- similar to type cast. cast to a different data type of a given column
+- astype does not have inplace arg, hence need to re-assign
+- Note: pandas read_csv() converts all int columns into float since few columns values is NaN
+
+nba = pd.read_csv("nba.csv").dropna(how = "all")
+nba["Salary"].fillna(0, inplace = True)
+nba["College"].fillna("None", inplace = True)
+nba.head(6)
+
+nba["Salary"].astype("int")
+
+- re-assigning since astype() does not have inplace arg
+nba["Salary"] = nba["Salary"].astype("int")
+nba["Salary"] = nba["Salary"].astype("float")
+
+
+category datatype
+-------------------
+
+- "category" datatype only available in pandas. similar like enum. ex: use Category for gender value which can be either M or F
+- memory efficient since pandas will not need to store all the values in the form of object(i.e. String)
+nba["Position"].unique()
+5
+
+nba["Position"] = nba["Position"].astype("category")
+nba["Team"] = nba["Team"].astype("category")
+nba.info()
+- you will see the memory usage to go down after using category datatype
+
+sort_values() on DataFrame
+---------------------------
+- sort_values() to sort the dataframe by a given column
+nba = pd.read_csv("nba.csv")
+nba.head(3)
+
+nba.sort_values(by = "Name", ascending = False)
+nba.sort_values(by = "Salary", ascending = False, inplace = True)
+
+- na_position helps to show the NaN values on top (i.e. first) or bottom (i.e. last)
+nba.sort_values(by = "Salary", ascending = False, inplace = True, na_position - "first")
+
+- sort by multiple columns. first apply sort on "Team" and within each Team, sort the "Name" in alphabatical order
+nba.sort_values(by = ["Team", "Name"])
+
+- "Team" column to be sorted ascending order and "Name" to be sorted decending order
+nba.sort_values(by = ["Team", "Name"], ascending = [True, False])
+
+nba.sort_values(by = ["Team", "Name"], ascending = [True, False], inplace = True)
+
+
+sort_index() on DataFrame
+---------------------------
+- sort_index() to sort the dataframe by the index (the first column adds by the pandas Dataframe itself)
+nba = pd.read_csv("nba.csv")
+nba.head(3)
+
+nba.sort_index(ascending = True, inplace = True)
+
+rank values with .rank method
+------------------------------
+- rank works on a single columns which is a Series
+nba = pd.read_csv("nba.csv").dropna(how = "all")
+nba["Salary"] = nba["Salary"].fillna(0).astype("int")
+
+nba["Salary"].rank()
+
+
+Dataframe and Memory optimization
+====================================
+import pandas as pd
+df = pd.read_csv("employee.csv")
+df.head(3)
+
+df.info()
+
+<class 'pandas.core.frame.DataFrame>
+RangeIndex: 100 entries, o to 999
+Data columns (total 8 columns)
+#		column		Non-Null Count	Dtype
+----	------		--------------	------
+0		First Name	933	non-null	object
+1		Start Date	100	non-null	object
+2		Last Login Time	100	non-null	object
+..
+..
+dtypes: float64(1), int64(1), object(6)
+memory usage: 62.6+ Kb
+
+- Note: Date column also are stored as object (i.e. String), hence we cant do Date specific calculations.
+
+- to_datetime is pandas function to convert date string to datetime64 type
+df["Start Date"] = pd.to_datetime(df["Start Date"])
+0	1944-08-12
+1	1987-09-23
+..
+..
+Name: Start Date, Length: 1000, dtype: datetime64[ns]
+
+- if date is not present in the date string, pandas takes the current date
+df["Last Login Time"] = pd.to_datetime(df["Last Login Time"])
+
+df["Senior Management"] = df["Senior Management"].astype("bool")
+
+Filter Dataframe
+------------------
+df = pd.read_csv("employee.csv", parse_dates = ["Start Date", "Last Login Time"])
+df["Senior Management"] = df["Senior Management"].astype("bool")
+df["Gender"] = df["Gender"].astype("category")
+df.head(3)
+df.info()
+
+df["Gender"]
+
+df["Gender"] == "Male"
+0	True
+1	True
+..
+..
+
+- select the rows where gender is Male
+- pandas return the rows only where df["Gender"] == "Male" is True
+df[df["Gender"] == "Male"]
+
+- filter all emp from Finance team
+df["Team"]
+mask = df["Team"] == "Finance"
+df[mask]
+
+- Filter on boolean column
+df["Senior Management"] == True # since this condition will be like True == True, we can only add df["Senior Management"] as mask
+df[df["Senior Management"]]
+or
+mask = df["Senior Management"]
+df[mask]
+
+mask = df["Team"] != "Marketing"
+df[mask]
+
+mask = df["Salary"] > 10000
+df[mask]
+or
+df[df["Salary"] > 10000]
+
+- Filter on Datetime column
+mask = df["Start Date"] <= "1985-01-01"
+df[mask]
+
+
+- Filter by more than one column using &
+mask1 = df["Gender"] == "Male"
+mask2 = df["Team"] == "Marketing"
+df[mask1 & mask2]
+
+mask1 = df["Senior Management"]
+mask2 = df["Start Date"] <= "1985-01-01"
+df[mask1 | mask2]
+
+- combining AND OR
+mask1 = df["First Name"] == "Robert"
+mask2 = df["Team"] == "Client Services"
+mask3 = df["Start Date"] > "2016-06-01"
+df[(mask1 & mask2) | mask3]
+
+
+- isin() method is like in clause of sql
+df = pd.read_csv("employee.csv", parse_dates = ["Start Date", "Last Login Time"])
+df["Senior Management"] = df["Senior Management"].astype("bool")
+df["Gender"] = df["Gender"].astype("category")
+df.head(3)
+
+mask1 = df["Team"] == "Legal"
+mask2 = df["Team"] == "Sales"
+mask3 = df["Team"] == "Product"
+
+df[mask1 | mask2 | mask3]
+OR
+df["Team".isin(["Legal", "Sales", "Product"])]
+
+
+.isnull() and .notnull()
+---------------------------
+df = pd.read_csv("employee.csv", parse_dates = ["Start Date", "Last Login Time"])
+df["Senior Management"] = df["Senior Management"].astype("bool")
+df["Gender"] = df["Gender"].astype("category")
+df.head(3)
+
+- extract rows where the value for Team is null
+mask = df["Team"].isnull()
+df[mask]
+
+mask = df["Team"].notnull()
+df[mask]
+
+.between()
+-------------
+- extract all emp with salary greater than 5000 and less than 10000
+- both lower and upper boundaries are inclusive
+mask = df["Salary"].between(5000, 10000)
+df[mask]
+
+mask = df["Start Date"].between("1991-01-01", "1992-12-31")
+df[mask]
+
+mask = df["Last Login Time"].between("08:30AM", "12:00PM")
+df[mask]
+
+.duplicated()
+--------------
+df = pd.read_csv("employee.csv", parse_dates = ["Start Date", "Last Login Time"])
+df["Senior Management"] = df["Senior Management"].astype("bool")
+df["Gender"] = df["Gender"].astype("category")
+df.head(3)
+
+df["First Name"].duplicated(keep = "")
+
+
+set_index()
+-------------
+- equivalent to index_col arg of read_csv method
+- i.e. use the provided column as the index of the DataFrame
+
+bond = pd.read_csv("jamesbond.csv", index_col = "Film")
+
+bond = pd.read_csv("jamesbond.csv")
+bond.head(3)
+
+
+bond.set_index(keys = "Film", inplace = True)
+bond.head(3)
+
+		year		Actor
+Film	
+mmm		1969		xyz
+nnn		1962		abc
+
+- reverse the index col. drop = False will not drop the previous Film column but use the default auto numeric column as index.
+bonb.reset_index(drop = False)
+
+	Film	year		Actor
+0	mmm		1969		xyz
+1	nnn		1962		abc
+..
+..
+
+- drop the previous index column
+bonb.reset_index(drop = True, inplace = True)
+
+	year		Actor
+0	1969		xyz
+1	1962		abc
+
+retrieve rows by index label with .loc[] accessor
+---------------------------------------------------
+- to retrieve rows from dataframe by index label, provided we assigned index of dataframe to a column instead of default numeric index.
+- 1st arg: the index label name.
+- 2nd arg: selective list of columns
+
+bond = pd.read_csv("jamesbond.csv", index_col = "Film")
+
+bond.sort_index(inplace = True)
+
+					year		Actor
+Film	
+casino royal		1969		xyz
+a view to kill		1962		abc
+casino royal		1980		xyz
+james bond			1997		mno
+
+- now that we have a label for each row with Film as index
+- converts the columns for the selected row agin as list of rows.
+
+
+- if there is only single row match the criteria, we get a series otherwise geta Dataframe
+
+bond.loc["a view to kill"]
+
+Year		1969
+Actor		sean conney
+Director
+..
+..
+
+bond.loc["casino royal"]
+
+Film				Year		Actor
+casino royal		1969		xyz
+casino royal		1980		xyz
+
+bond.loc["casino royal", [""]]
+
+- .loc can also support all type of slice operations
+bond.loc["a view to kill" : "james bond"]
+
+					year		Actor
+Film	
+a view to kill		1962		abc
+casino royal		1980		xyz
+james bond			1997		mno
+
+
+retrieve rows by index position with .iloc[] accessor
+------------------------------------------------------
+- similar to .loc , iloc[8], return the data from dataframe using index position.
+- slice operations works as expected.
+
+bond = pd.read_csv("jamesbond.csv")
+bond.head(3)
+
+	Film	year		Actor
+0	mmm		1969		xyz
+1	nnn		1962		abc
+..
+..
+
+bond.iloc[0]
+
+Year		1969
+Actor		xyz
+Director
+..
+..
+
+- similar to .loc[], this returns in the form of Dataframe for each index positions
+
+bond.iloc[[5,10,14,25]]
+
+
+
+second arguments to .loc and .iloc accessors
+-----------------------------------------------
+- the 2nd arg works like a selection of columns while the 1st record is for the row by the index label
+
+bond = pd.read_csv("jamesbond.csv", index_col = "Film")
+
+bond = pd.read_csv("jamesbond.csv")
+bond.head(3)
+
+- accessing the cell for the index label (row) and column name
+bond.loc["Monraker", "Director"]
+"Lewis Gilbert"
+
+bond.loc["Goldfinger", ["Actor", "Director"]]
+Actor       Sean Connery
+Director    Guy Hamilton
+Name: Goldfinger, dtype: object
+
+bond.loc[["Goldfinger", "Thunderball"], ["Actor", "Director"]]
+			Actor			Director
+Film		
+Goldfinger	Sean Connery	Guy Hamilton
+Thunderball	Sean Connery	Terence Young
+
+- slicing operations are also supported on both of the 1st and 2nd arguments.
+
+bond.loc["From Russia with Love":"Thunderball", ["Actor", "Director"]]]
+				Actor		Director	Box Office	Budget
+Film				
+From Russia with Love		Sean Connery	Terence Young	543.8	12.6
+Goldfinger	Sean Connery	Guy Hamilton	820.4	18.6
+Thunderball	Sean Connery	Terence Young	848.1	41.9
+
+
+bond.loc["From Russia with Love":"Thunderball", "Actor":"Budget"]
+						Actor			Budget
+Film		
+From Russia with Love	Sean Connery	12.6
+Goldfinger				Sean Connery	18.6
+Thunderball				Sean Connery	41.9
+
+bond.iloc[0, [1,2]]
+Actor        Sean Connery
+Director    Terence Young
+Name: Dr. No, dtype: object
+
+bond.iloc[[2,3], [1,2]]
+			Actor			Director
+Film		
+Goldfinger	Sean Connery	Guy Hamilton
+Thunderball	Sean Connery	Terence Young		
+
+bond.iloc[2:4, 1:3]
+			Actor			Director
+Film		
+Goldfinger	Sean Connery	Guy Hamilton
+Thunderball	Sean Connery	Terence Young
+
+
+set a new value for one or more cells for a given row
+-------------------------------------------------------
+import pandas as pd
+bond = pd.read_csv("jamesbond.csv", index_col="Film")
+bond.sort_index(inplace=True)
+
+bond.loc["Diamonds Are Forever", "Actor"] = "Sir Sean Connery"
+
+bond.head()
+						Year	Actor	Director	Box Office	Budget	Bond Actor Salary
+Film						
+A View to a Kill		1985	Roger Moore	John Glen	275.2	54.5	9.1
+Casino Royale			2006	Daniel Craig	Martin Campbell	581.5	145.3	3.3
+Casino Royale			1967	David Niven	Ken Hughes	315.0	85.0	NaN
+Diamonds Are Forever	1971	Sean Connery	Guy Hamilton	442.5	34.7	5.8
+Die Another Day			2002	Pierce Brosnan	Lee Tamahori	465.4	154.2	17.9
+
+
+bond.loc["Diamonds Are Forever", "Actor"]
+'Sir Sean Connery'
+
+- set value to multiple columns for given row
+bond.loc["Diamonds Are Forever", ["Box Office", "Budget", "Bond Actor Salary"]] = [40000, 4000, 400]
+
+bond.loc["Diamonds Are Forever", "Box Office"]
+40000
+bond.loc["Diamonds Are Forever", "Budget"]
+4000
+
+set multiple values in a DataFrame
+-----------------------------------
+bond = pd.read_csv("jamesbond.csv", index_col="Film")
+bond.sort_index(inplace=True)
+bond.head(3)
+
+- the 1st arg of .loc can also have a series 
+bond["Actor"]
+is_actor_sean = bond["Actor"] == "Sean Connery"
+bond.loc[is_actor_sean]
+bond.loc[is_actor_sean, "Actor"] = "Sir Sean Connery"
+
+.rename() Rename index labels or columns names in a dataframe
+------------------------------------------------------
+bond = pd.read_csv("jamesbond.csv", index_col="Film")
+bond.sort_index(inplace=True)
+bond.head(3)
+
+- rename the index label. by defult pandas try to rename this labels in index labels
+bond.rename(mapper = {"GoldenEye":"Golden Eye", "The is not Enough":"Best ever bond movie"})
+
+bond.rename(mapper = {"GoldenEye":"Golden Eye", "The is not Enough":"Best ever bond movie"}, axis = 0)
+
+bond.rename(mapper = {"GoldenEye":"Golden Eye", "The is not Enough":"Best ever bond movie"}, axis = "rows")
+
+bond.rename(mapper = {"GoldenEye":"Golden Eye", "The is not Enough":"Best ever bond movie"}, axis = "index")
+
+bond.rename(index = {"GoldenEye":"Golden Eye", "The is not Enough":"Best ever bond movie"})
+
+- rename the columns names. to make the rename permanent use inplace=True
+bond.rename(mapper = {"Year":"Release Year", "Box Office":"Revenues"}, axis = 1)
+bond.rename(mapper = {"Year":"Release Year", "Box Office":"Revenues"}, axis = "columns")
+bond.rename(columns = {"Year":"Release Year", "Box Office":"Revenues"})
+
+bond.rename(columns = {"Year":"Release Year", "Box Office":"Revenues"})
+ 
+bond.rename(columns = {"Year":"Release Year", "Box Office":"Revenues"}, inplace = True)
+
+- another way to change column names is just set the list of columns name as List. but we need to include all the name
+bond.columns = ["Year of Release", "Actor", "Director", "Gross", "Cost", "Salary"]
+
+bond.columns
+Index(['Film', 'Year', 'Actor', 'Director', 'Box Office', 'Budget',
+       'Bond Actor Salary'],
+      dtype='object')
+
+
+
+
+.drop() Delete rows or columns from Dataframe
+-------------------------------------------------
+bond = pd.read_csv("jamesbond.csv", index_col="Film")
+bond.sort_index(inplace=True)
+bond.head(3)
+
+- pass the index label to remove the complete row
+bond.drop("A view to a Kill")
+
+- to remove multiple rows
+bond.drop([""A view to a Kill", "Casino Royale"])
+
+bond.drop([""A view to a Kill", "Casino Royale"], inplace = True)
+
+- remove columns
+bond.drop(labels = ["Box Office", "Bond Actor Salary", "Actor"], axis = "columns", inplace = True)
+
+bond
+
+- .pop() return a columns as Series and also remove from the dataframe permanently.
+actor = bond.pop("Actor")
+
+actor
+
+- using python del to remove the column (accessing bond["Director"] returns a Series)
+del bond["Director"]
+
+
+.sample() to extract a random sample of rows and columns.
+-----------------------------------------------------------
+bond = pd.read_csv("jamesbond.csv", index_col="Film")
+bond.sort_index(inplace=True)
+bond.head(3)
+
+- random row
+bond.sample()
+
+- random 5 rows
+bond.sample(n = 5)
+
+- randomly extract 25% i.e. 1 out of every 4 rows
+bond.sample(frac = .25)
+
+- extract ramdom columns
+bond.sample(n = 3, axis = "columns")
+bond.sample(n = 3, axis = 1)
+
+Filtering Dataframe with where method
+---------------------------------------
+bond = pd.read_csv("jamesbond.csv")
+bond.sort_index(inplace=True)
+bond.head(3)
+
+bond["Actor"]
+mask = bond["Actor"] == "Sean Connery"
+bond[mask]
+	Film	Year	Actor	Director	Box Office	Budget	Bond Actor Salary
+0	Dr. No	1962	Sean Connery	Terence Young	448.8	7.0	0.6
+1	From Russia with Love	1963	Sean Connery	Terence Young	543.8	12.6	1.6
+2	Goldfinger	1964	Sean Connery	Guy Hamilton	820.4	18.6	3.2
+3	Thunderball	1965	Sean Connery	Terence Young	848.1	41.9	4.7
+5	You Only Live Twice	1967	Sean Connery	Lewis Gilbert	514.2	59.9	4.4
+7	Diamonds Are Forever	1971	Sean Connery	Guy Hamilton	442.5	34.7	5.8
+13	Never Say Never Again	1983	Sean Connery	Irvin Kershner	380.0	86.0	NaN
+
+
+- where method return all the rows of the dataframe but columns will be NaN for rows not meeting the where clause
+bond.where(mask)
+	Film	Year	Actor	Director	Box Office	Budget	Bond Actor Salary
+10	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+11	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+12	NaN	NaN	NaN	NaN	NaN	NaN	NaN
+13	Never Say Never Again	1983.0	Sean Connery	Irvin Kershner	380.0	86.0	NaN
+
+
+Filtering Dataframe with query method
+---------------------------------------
+- to use the query we need to make sure there is not space in the column name, like below:
+
+bond.columns = [column_name.replace(" ", "_") for column_name in bond.columns]
+
+
+bond = pd.read_csv("jamesbond.csv")
+bond.sort_index(inplace=True)
+bond.head(3)
+
+bond.columns
+Index(['Film', 'Year', 'Actor', 'Director', 'Box Office', 'Budget',
+       'Bond Actor Salary'],
+      dtype='object')
+	  
+print([column_name for column_name in bond.columns])
+['Film', 'Year', 'Actor', 'Director', 'Box Office', 'Budget', 'Bond Actor Salary']
+
+bonb.columns = [column_name for column_name in bond.columns]
+bond.columns = [column_name.replace(" ", "_") for column_name in bond.columns]
+Index(['Film', 'Year', 'Actor', 'Director', 'Box_Office', 'Budget',
+       'Bond_Actor_Salary'],
+      dtype='object')
+
+bond.query('Actor == "Sean Connery"')
+	Film	Year	Actor	Director	Box_Office	Budget	Bond_Actor_Salary
+0	Dr. No	1962	Sean Connery	Terence Young	448.8	7.0	0.6
+1	From Russia with Love	1963	Sean Connery	Terence Young	543.8	12.6	1.6
+2	Goldfinger	1964	Sean Connery	Guy Hamilton	820.4	18.6	3.2
+
+bond.query('Director == "Terence Young"')
+bond.query('Director != "Terence Young"')
+
+bond.query('Actor == "Sean Connery" and Director == "Terence Young"')
+
+bond.query("Actor in ['David Niven','George Lazenby']")
+
+Film	Year	Actor	Director	Box_Office	Budget	Bond_Actor_Salary
+4	Casino Royale	1967	David Niven	Ken Hughes	315.0	85.0	NaN
+6	On Her Majesty's Secret Service	1969	George Lazenby	Peter R. Hunt	291.5	37.3	0.6
+
+
+.apply() method on single column
+----------------------------------
+bond = pd.read_csv("jamesbond.csv")
+bond.sort_index(inplace=True)
+bond.head(3)
+
+def convert_to_staring_and_add_millions(number):
+	return str(number) + " MILLIONS"
+	
+bond["Box Office"].apply(convert_to_staring_and_add_millions)
+bond["Box Office"] = bond["Box Office"].apply(convert_to_staring_and_add_millions)
+
+bond
+
+	Film	Year	Actor	Director	Box Office	Budget	Bond Actor Salary
+0	Dr. No	1962	Sean Connery	Terence Young	448.8 MILLIONS	7.0	0.6
+1	From Russia with Love	1963	Sean Connery	Terence Young	543.8 MILLIONS	12.6	1.6
+
+- we can also apply on multiple columns
+columns = ["Box Office", "Budget"]
+
+for col in columns:
+	bond[col] = bond[col].apply(convert_to_staring_and_add_millions)
+
+.apply() methid with row values
+-----------------------------------
+- add a custom columns based of values of some columns for each rows
+- here row is the array of columns values.
+
+bond = pd.read_csv("jamesbond.csv", index_col="Film")
+bond.sort_index(inplace=True)
+bond.head(3)
+
+def good_movie(row):
+	actor = row[1]
+	budget = row[4]
+	if actor == "Pierce Brosnan":
+		return "The Best"
+	elif actor == "Roger Moore" and budget > 40:
+		return "Enjoyable"
+	else:
+		return "I have no clue"
+
+bond.apply(good_movie, axis = "columns")
+- here even though we moing through the rows but the values are columns gets calculated.
+
+Film
+A View to a Kill                        Enjoyable
+Casino Royale                      I have no clue
+Die Another Day                          The Best
+
+
+.copy method
+--------------
+- creates and exact copy of pandas existing object such as Series or Dataframe but stores them completely separatly in memory.
+- follow the below use case where changing a column value actually updated the original dataframe, sometime we may not want to do that, instead keep the original dataframe intact
+
+bond = pd.read_csv("jamesbond.csv", index_col="Film")
+bond.sort_index(inplace=True)
+bond.head(3)
+
+directors = bond["Director"]
+directors.head(3)
+
+- update a series value. this will show a read warning even though the data has changed not only on the series of data but also on the original dataframe
+
+directors["A View to a Kill"] = "Mr. John Glen"
+
+==========
+D:\installations\anaconda3\lib\site-packages\ipykernel_launcher.py:3: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  This is separate from the ipykernel package so we can avoid doing imports until
+==========
+
+directors.head(1)
+Film
+A View to a Kill    Mr. John Glen
+Name: Director, dtype: object
+
+bond.head(3)
+	Year	Actor	Director	Box Office	Budget	Bond Actor Salary
+Film						
+A View to a Kill	1985	Roger Moore	Mr. John Glen	275.2	54.5	9.1
+
+
+- use the .copy() to get a brand new isolated object.
+directors = bond["Director"].copy()
+directors["A View to a Kill"] = "Mr. John Glen"
+
+directors.head(2)
+Film
+A View to a Kill      Mr. John Glen
+Casino Royale       Martin Campbell
+Name: Director, dtype: object
+
+bond.head(2)
+	Year	Actor	Director	Box Office	Budget	Bond Actor Salary
+Film						
+A View to a Kill	1985	Roger Moore	John Glen	275.2	54.5	9.1
+
+- look at the value of "John Glen" remain unchanged on the original dataframe.
+
+
+Working with Text data
+============================
+- few general infor to watchout for any dataframe to get a sense about the data.
+- remove any NaN columns.
+- reduce the memory by converting datatypes of columns from string to category (enum in java).
+
+import pandas as pd
+chicago = pd.read_csv("chicago.csv")
+chicago.info()
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 32063 entries, 0 to 32062
+Data columns (total 4 columns):
+ #   Column                  Non-Null Count  Dtype 
+---  ------                  --------------  ----- 
+ 0   Name                    32062 non-null  object
+ 1   Position Title          32062 non-null  object
+ 2   Department              32062 non-null  object
+ 3   Employee Annual Salary  32062 non-null  object
+dtypes: object(4)
+memory usage: 1002.1+ KB
+
+- shows the no.of unique value for each columns.
+chicago.nunique()
+
+Name                      31776
+Position Title             1093
+Department                   35
+Employee Annual Salary     1156
+dtype: int64
+
+- shows no.o f unique value for the soecific column
+chicago["Department"].nunique()
+35
+
+- change the Department datatype fro m string to category
+chicago["Department"] = chicago["Department"].astype("category")
+chicago.head(3)
+
+-- notice the size of dataframe to reduce.
+chicago.info()
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 32063 entries, 0 to 32062
+Data columns (total 4 columns):
+ #   Column                  Non-Null Count  Dtype   
+---  ------                  --------------  -----   
+ 0   Name                    32062 non-null  object  
+ 1   Position Title          32062 non-null  object  
+ 2   Department              32062 non-null  category
+ 3   Employee Annual Salary  32062 non-null  object  
+dtypes: category(1), object(3)
+memory usage: 784.4+ KB
+
+common String Methods - .lower(), .upper(), .title() and .len()
+----------------------------------------------------------------
+import pandas as pd
+chicago = pd.read_csv("chicago.csv").dropna(how = "all")
+chicago["Department"] = chicago["Department"].astype("category")
+chicago.info()
+chicago.tail(3)
+
+- to use these methods we need to prefix them with .str
+chicago["Name"].str.title()
+chicago["Name"].str.lower()
+chicago["Name"].str.upper()
+
+chicago["Name"] = chicago["Name"].str.title()
+chicago
+
+	Name	Position Title	Department	Employee Annual Salary
+0	Aaron, Elvia J	WATER RATE TAKER	WATER MGMNT	$90744.00
+
+chicago["Department"].str.len()
+0        11.0
+1         6.0
+
+
+String Methods - .replace()
+----------------------------
+"Hello World".replace("l", "L")
+'HeLLo WorLd'
+
+
+import pandas as pd
+chicago = pd.read_csv("chicago.csv").dropna(how = "all")
+chicago["Department"] = chicago["Department"].astype("category")
+chicago.info()
+chicago.tail(3)
+
+
+chicago["Department"] = chicago["Department"].str.replace("MGMNT", "MANAGEMENT")
+
+chicago["Employee Annual Salary"].str.replace("$","").astype(float)
+
+0         90744.0
+1         84450.0
+2         84450.0
+
+chicago["Employee Annual Salary"] = chicago["Employee Annual Salary"].str.replace("$","").astype(float)
+
+	Name	Position Title	Department	Employee Annual Salary
+0	AARON, ELVIA J	WATER RATE TAKER	WATER MGMNT	90744.0
+
+
+- 10 largest salary
+chicago["Employee Annual Salary"].nlargest(10)
+
+Filtering a DataFrame's rows with string methods .contains, .startswith(), .endswith()
+----------------------------------------------------------------------------------------
+chicago["Position Title"].str.lower.str.contains("water")
+mask = chicago["Position Title"].str.lower.str.contains("water")
+chicago[mask]
+
+
+chicago["Position Title"].str.lower.str.startswith("water")
+mask = chicago["Position Title"].str.lower.str.startswith("water")
+chicago[mask]
+
+chicago["Position Title"].str.lower.str.endswith("water")
+
+More String Methods - strip, lstrip, and rstrip for removing whitespace
+-------------------------------------------------------------
+- remove any whitespaces from the begining of the string
+"      Hello world  ".lstrip()
+
+- remove any whitespaces from the end of the string
+"      Hello world  ".rstrip()
+
+- remove any whitespaces from both the begining and end of the string
+"      Hello world  ".strip()
+
+
+Invoking String Methods on Index labels
+and Columns labels
+--------------------------------------------------------------
+import pandas as pd
+chicago = pd.read_csv("chicago.csv", index_col="Name").dropna(how = "all")
+chicago["Department"] = chicago["Department"].astype("category")
+chicago.info()
+chicago.tail(3)
+
+	Position Title	Department	Employee Annual Salary
+Name			
+AARON, ELVIA J	WATER RATE TAKER	WATER MGMNT	$90744.00
+AARON, JEFFERY M	POLICE OFFICER	POLICE	$84450.00
+
+chicago.index
+Index(['AARON,  ELVIA J', 'AARON,  JEFFERY M', 'AARON,  KARINA',
+       'AARON,  KIMBERLEI R', 'ABAD JR,  VICENTE M', 'ABARCA,  ANABEL',
+       'ABARCA,  EMMANUEL', 'ABASCAL,  REECE E', 'ABBASI,  CHRISTOPHER',
+       'ABBATACOLA,  ROBERT J',
+       ...
+       'ZWIT,  JEFFREY J', 'ZWOLFER,  MATTHEW W', 'ZYCH,  MATEUSZ',
+       'ZYDEK,  BRYAN', 'ZYGADLO,  JOHN P', 'ZYGADLO,  MICHAEL J',
+       'ZYGOWICZ,  PETER J', 'ZYMANTAS,  MARK E', 'ZYRKOWSKI,  CARLO E',
+       'ZYSKOWSKI,  DARIUSZ'],
+      dtype='object', name='Name', length=32062)
+
+- change the index labels to capitalize and remove any whitespaces 
+chicago.index.str.strip().str.title()
+chicago.index = chicago.index.str.strip().str.title()
+
+chicago.columns
+Index(['Position Title', 'Department', 'Employee Annual Salary'], dtype='object')
+
+- once the conversion looks fine, assign this to chicago.columns
+chicago.columns.str.strip().str.title()
+
+chicago.columns = chicago.columns.str.strip().str.title()
+
+
+Split Strings by Characters with the str.split Method
+-------------------------------------------------------------
+"Hello my name is Boris".split()
+
+import pandas as pd
+chicago = pd.read_csv("chicago.csv", index_col="Name").dropna(how = "all")
+chicago["Department"] = chicago["Department"].astype("category")
+chicago.info()
+chicago.tail(3)
+
+chicago["Name"].str.split(",")
+chicago["Name"].str.split(",").str.get(0)
+chicago["Name"].str.split(",").str.get(0).str.title()
+chicago["Name"].str.split(",").str.get(0).str.title().value_counts()
+
+chicago["Position Title"].str.split(" ").str.get(0).value_counts()
+
+POLICE                10856
+FIREFIGHTER-EMT        1509
+SERGEANT               1186
+POOL                    918
+
+- extract the last name from the name series of chicago 
+chicago["Name"].str.split(",").str.get(1).str.strip().str.split(" ").str.get(0)
+
+chicago["Name"].str.split(",").str.get(1).str.strip().str.split(" ").str.get(0).value_counts().head(3)
+
+- *** Exploring the expand and n
+Parameters of the str.split Method. add new columns to existing dataframe
+
+chicago["Name"].str.split("," expand = True)
+
+chicago[["First Name", "Last Name"]] = chicago["Name"].str.split("," expand = True)
+
+	Name	Position Title	Department	Employee Annual Salary	First Name	Last Name
+0	AARON, ELVIA J	WATER RATE TAKER	WATER MGMNT	$90744.00	AARON	ELVIA J
+
+- expand untill n split separator provided
+chicago["Position Title"].str.split(" ", expand = True)
+chicago[["First Title Word", "Remaining words"]] = chicago["Position Title"].str.split(" ", expand = True, n = 1)
+
+
+MultiIndex
+===============
+- convert date string column of dataframe to Date datatype
+import pandas as pd
+bigmac = pd.read_csv("bigmac.csv") 
+
+	Date	Country	Price in US Dollars
+0	1/2016	Argentina	2.39
+
+bigmac = pd.read_csv("bigmac.csv", parse_dates=["Date"])
+	Date	Country	Price in US Dollars
+0	2016-01-01	Argentina	2.39
+
+
+bigmac = pd.read_csv("bigmac.csv", parse_dates=["Date"])
+bigmac.info()
+bigmac.dtypes
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 652 entries, 0 to 651
+Data columns (total 3 columns):
+ #   Column               Non-Null Count  Dtype         
+---  ------               --------------  -----         
+ 0   Date                 652 non-null    datetime64[ns]
+ 1   Country              652 non-null    object        
+ 2   Price in US Dollars  652 non-null    float64       
+dtypes: datetime64[ns](1), float64(1), object(1)
+memory usage: 15.4+ KB
+Date                   datetime64[ns]
+Country                        object
+Price in US Dollars           float64
+dtype: object
+
+
+Create a MultiIndex on a DataFrame
+with the set_index Method
+--------------------------------------------------------------
+- add multiple index columns. set the columns with less unique values to the first index column.
+- 2 ways to create multi index dataframe.
+- index_col --> during creation of dataframe.
+bigmac = pd.read_csv("bigmac.csv", index_col = ["Date", "Country"])
+- set_index --> convert the default single index dataframe to multi index.
+bigmac.set_index(keys = ["Date", "Country"], inplace=True)
+
+
+bigmac = pd.read_csv("bigmac.csv", parse_dates=["Date"])
+bigmac.head(3)
+	Date	Country	Price in US Dollars
+0	2016-01-01	Argentina	2.39
+1	2016-01-01	Australia	3.74
+
+bigmac.set_index(keys = ["Date", "Country"])
+
+						Price in US Dollars
+Date		Country	
+2016-01-01	Argentina	2.39
+			Australia	3.74
+			
+010-01-01	Turkey		3.83
+			UAE			2.99
+
+bigmac.nunique()
+Date                    12
+Country                 58
+Price in US Dollars    330
+dtype: int64
+
+- column with smaller no of unique values hould probably the outer most index columns.
+
+- to make the set_index operation permanent
+bigmac.set_index(keys = ["Date", "Country"], inplace=True)
+
+- sort the index coulmn. first the outer most and within that outer most
+bigmac.sort_index()
+
+- .index returns a list of tuples. the tuples are pair of Date and Country
+bigmac.index
+
+MultiIndex([('2016-01-01',      'Argentina'),
+            ('2016-01-01',      'Australia'),
+            ('2016-01-01',         'Brazil'),
+			..
+			..
+			('2010-01-01',  'United States'),
+            ('2010-01-01',        'Uruguay')],
+           names=['Date', 'Country'], length=652)
+
+type(bigmac.index)
+pandas.core.indexes.multi.MultiIndex
+		   
+bigmac.index.names
+FrozenList(['Date', 'Country'])
+
+bigmac.index[0]
+(Timestamp('2016-01-01 00:00:00'), 'Argentina')
+
+
+Extract Index Level Values with the
+get_level_values Method
+---------------------------------------------------------------
+bigmac = pd.read_csv("bigmac.csv", parse_dates=["Date"], index_col = ["Date", "Country"])
+bigmac.head(3)
+
+- name of the index col or index position
+bigmac.index.get_level_values("Date")
+bigmac.index.get_level_values(0)
+
+Change Index Level Name with the
+set_names Method
+----------------------------------------------------------------
+bigmac = pd.read_csv("bigmac.csv", parse_dates=["Date"], index_col = ["Date", "Country"])
+bigmac.head(3)
+
+- change all the index level names
+bigmac.index.set_names(names = ["Day", "Location"], inplace = True)
+bigmac
+
+						Price in US Dollars
+Day			Location	
+2016-01-01	Argentina	2.39
+			Australia	3.74
+			
+- change one of the index level name
+bigmac.index.set_names(names = "Date", level = "Day", inplace = True)
+
+						Price in US Dollars
+Date		Location	
+2016-01-01	Argentina	2.39
+			Australia	3.74
+			
+The sort_index Method on a
+MultiIndex DataFrame
+---------------------------------------------------------------
+bigmac = pd.read_csv("bigmac.csv", parse_dates=["Date"], index_col = ["Date", "Country"])
+bigmac.head(3)
+
+- same sorting order for each levels
+bigmac.sort_index(ascending = True)
+bigmac.sort_index(ascending = False)
+
+- custom sort for specific level. i.e. sort ascending = True for Date and ascending = False for Country
+ 
+bigmac.sort_index(ascending = [True, False])
+
+							Price in US Dollars
+Date		Location	
+2010-01-01	Uruguay			3.32
+			United States	3.58
+			
+Extract Rows from a MultiIndex
+DataFrame (.loc and .iloc)
+---------------------------------------------------------------
+bigmac = pd.read_csv("bigmac.csv", parse_dates=["Date"], index_col = ["Date", "Country"])
+bigmac.head(3)
+
+bigmac.sort_index(inplace = True)
+bigmac.loc["2010-01-01"]
+
+						Price in US Dollars
+Date		Location	
+2010-01-01	Argentina	1.84
+			Australia	3.98
+			
+- using .loc[] where the 1st arg is row and 2nd arg is column
+bigmac.loc[("2010-01-01", "Argentina")]
+Price in US Dollars    1.84
+Name: (2010-01-01 00:00:00, Argentina), dtype: float64
+
+
+bigmac.loc[("2010-01-01", "Argentina"), "Proce in US Dollars"]
+
+Date        Location 
+2010-01-01  Argentina    1.84
+Name: Price in US Dollars, dtype: float64
+
+bigmac.loc[("2010-01-01", "Argentina"), ["Price in US Dollars", "Price in US Dollars"]]
+
+
+						Price in US Dollars	Price in US Dollars
+Date	Location		
+2010-01-01	Argentina	1.84				1.84
+
+
+bigmac.loc[("2010-01-01", )]
+
+			Price in US Dollars
+Location	
+Argentina	1.84
+Australia	3.98
+
+- iloc is much simpler. it simply access rows using the index allocated to each rows does not matter whether it is a single index or multi index
+bigmac.iloc[0]
+
+bigmac.iloc[[10,20,30,250]]
+						Price in US Dollars
+Date		Location	
+2010-01-01	Denmark		5.99
+			Malaysia	2.08
+			Singapore	3.19
+2012-07-01	Turkey		4.52
+
+The transpose Method on a
+MultiIndex DataFrame
+------------------------------------------------------------
+- it swaps the rows and columns. it takes the row lebels and moves them to be column header and takes the column labels an moves thme to row header.
+
+bigmac.transpose()
+
+Date	2010-01-01
+Location			Argentina	Australia	Brazil	Britain	Canada	Chile	China	Colombia	Costa Rica	Czech Republic	
+Price in US Dollars	1.84		3.98		4.76	3.67	3.97	3.18	1.83	3.91	3.52	3.71
+
+
+bigmac.loc[("Price in US Dollars")]
+
+Date        Location     
+2010-01-01  Argentina        1.84
+            Australia        3.98
+            Brazil           4.76
+            Britain          3.67
+            Canada           3.97
+                             ... 
+2016-01-01  Ukraine          1.54
+            United States    4.93
+            Uruguay          3.74
+            Venezuela        0.66
+            Vietnam          2.67
+Name: Price in US Dollars, Length: 652, dtype: float64
+
+
+The .swaplevel() Method
+---------------------------
+- swap the index lebels
+- in case we have more than 2 index lebels, we pass the from and to index lables to swap.
+
+bigmac = pd.read_csv("bigmac.csv", parse_dates=["Date"], index_col = ["Date", "Country"])
+bigmac.head(3)
+
+						Price in US Dollars
+Date		Country	
+2016-01-01	Argentina	2.39
+			Australia	3.74
+			Brazil		3.35
+			
+
+bigmac.swaplevel()
+
+						Price in US Dollars
+Country	Date	
+Argentina	2016-01-01	2.39
+Australia	2016-01-01	3.74
+
+bigmac.swaplevel("Date", "Country")
+bigmac.swaplevel("Country", "Date")
+
+The .stack() Method
+----------------------------------------
+- basically change the visualization of the dataframe, pivots the columns, takes the columns and moves them to main index.
+
+world = pd.read_csv("worldstats.csv", index_col = ["country", "year"])
+world.head(3)
+
+					Population		GDP
+country		year		
+Arab World	2015	392022276.0		2.530102e+12
+			2014	384222592.0		2.873600e+12
+
+
+world.stack()
+
+country     year            
+Arab World  2015  Population    3.920223e+08
+                  GDP           2.530102e+12
+            2014  Population    3.842226e+08
+                  GDP           2.873600e+12
+				  
+The pivot Method
+----------------------------------------------------
+sales = pd.read_csv("salesmen.csv", parse_dates=["Date"])
+sales.info()
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 1830 entries, 0 to 1829
+Data columns (total 3 columns):
+ #   Column    Non-Null Count  Dtype         
+---  ------    --------------  -----         
+ 0   Date      1830 non-null   datetime64[ns]
+ 1   Salesman  1830 non-null   object        
+ 2   Revenue   1830 non-null   int64         
+dtypes: datetime64[ns](1), int64(1), object(1)
+memory usage: 43.0+ KB
+
+sales.nunique()
+Date         366
+Salesman       5
+Revenue     1676
+dtype: int64
+
+sales.pivot(index="Date", columns="Salesman", values="Revenue")
+
+Salesman	Bob	Dave	Jeb	Oscar	Ronald
+Date					
+2016-01-01	7172	1864	4430	5250	2639
+2016-01-02	6362	8278	8026	8661	4951
+2016-01-03	5982	4226	5188	7075	2703
+2016-01-04	7917	3868	3144	2524	4258
+
+Use the pivot_table method to
+create an aggregate summary of a Dataframe
+----------------------------------------------------------------
+- same as excel pivot
+- useful for soing some aggregation operation like sum, avg based on some grouping of column values.
+
+foods = pd.read_csv("foods.csv")
+foods.info()
+foods.head(3)
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 1000 entries, 0 to 999
+Data columns (total 6 columns):
+ #   Column      Non-Null Count  Dtype  
+---  ------      --------------  -----  
+ 0   First Name  1000 non-null   object 
+ 1   Gender      1000 non-null   object 
+ 2   City        1000 non-null   object 
+ 3   Frequency   1000 non-null   object 
+ 4   Item        1000 non-null   object 
+ 5   Spend       1000 non-null   float64
+dtypes: float64(1), object(5)
+memory usage: 47.0+ KB
+
+	First Name	Gender	City		Frequency	Item	Spend
+0	Wanda		Female	Stamford	Weekly		Burger	15.66
+1	Eric		Male	Stamford	Daily		Chalupa	10.56
+2	Charles		Male	New York	Never		Sushi	42.14
+
+- get the avg spend for Males and Females
+foods.pivot_table(values="Spend", index="Gender", aggfunc="mean")
+
+		Spend
+Gender	
+Female	50.709629
+Male	49.397623
+
+- get the total spend for Males and Females
+foods.pivot_table(values="Spend", index="Gender", aggfunc="sum")
+
+		Spend
+Gender	
+Female	25963.33
+Male	24106.04
+
+- get total spend for each items
+foods.pivot_table(values="Spend", index="Item", aggfunc="sum")
+		Spend
+Item	
+Burger	7765.73
+Burrito	8270.44
+Chalupa	7644.52
+
+The GroupBy Object
+===============================================
+- creates budle of dataframes for each group by columns and combine thme in the form of GroupBy Object, so basically its a container of many dataframes.
+
+import pandas as pd
+
+fortune = pd.read_csv("fortune1000.csv")
+
+Rank	Company	Sector	Industry	Location	Revenue	Profits	Employees
+0	1	Walmart	Retailing	General Merchandisers	Bentonville, AR	482130	14694	2300000
+1	2	Exxon Mobil	Energy	Petroleum Refining	Irving, TX	246204	16150	75600
+
+fortune = pd.read_csv("fortune1000.csv", index_col="Rank")
+fortune.head(3)
+
+	Company	Sector	Industry	Location	Revenue	Profits	Employees
+Rank							
+1	Walmart	Retailing	General Merchandisers	Bentonville, AR	482130	14694	2300000
+2	Exxon Mobil	Energy	Petroleum Refining	Irving, TX	246204	16150	75600
+
+- lets group by sector or industry since multiple companies fall under the sector or industry
+
+sector = fortune.groupby(by="Sector")
+sector
+
+<pandas.core.groupby.generic.DataFrameGroupBy object at 0x000002A1E8B31148>
+
+type(sector)
+
+pandas.core.groupby.generic.DataFrameGroupBy
+
+- no of sectors
+len(sector)
+21
+
+fortune["Sector"].nunique()
+21
+
+- details of each sectors
+sector.size()
+
+Sector
+Aerospace & Defense              20
+Apparel                          15
+Business Services                51
+Chemicals                        30
+Energy                          122
+Engineering & Construction       26
+Financials                      139
+Food and Drug Stores             15
+Food, Beverages & Tobacco        43
+Health Care                      75
+
+sector.size().sort_values(ascending = False)
+Sector
+Financials                      139
+Energy                          122
+Technology                      102
+Retailing                        80
+
+- extract the very first row for each sector dataframes of the sector groupby object
+sector.first()
+
+		Company	Industry	Location	Revenue	Profits	Employees
+Sector						
+Aerospace & Defense	Boeing	Aerospace and Defense	Chicago, IL	96114	5176	161400
+Apparel	Nike	Apparel	Beaverton, OR	30601	3273	62600
+Business Services	ManpowerGroup	Temporary Help	Milwaukee, WI	19330	419	27000
+
+
+- extract the very last row for each sector dataframes of the sector groupby object
+sector.last()
+
+	Company	Industry	Location	Revenue	Profits	Employees
+Sector						
+Aerospace & Defense	Delta Tucker Holdings	Aerospace and Defense	McLean, VA	1923	-133	12000
+Apparel	Guess	Apparel	Los Angeles, CA	2204	82	13500
+
+.groups
+------------------
+- returns a dict with key as sector name and value as list of row numbers
+
+type(sector.groups)
+dict
+
+sector.groups
+{'Aerospace & Defense': Int64Index([ 24,  45,  60,  88, 118, 120, 209, 245, 282, 378, 389, 490, 560,
+             605, 785, 788, 836, 903, 958, 987],
+            dtype='int64', name='Rank'),
+			..
+			..
+'Wholesalers': Int64Index([ 57,  64,  92, 102, 108, 119, 122, 167, 183, 185, 212, 276, 285,
+             315, 317, 320, 323, 335, 351, 357, 369, 391, 423, 463, 474, 477,
+             484, 564, 581, 599, 627, 653, 685, 727, 747, 780, 808, 837, 875,
+             991],
+            dtype='int64', name='Rank')}
+			
+- see that the row num 24 for company: Boeing falls under Sector: Aerospace & Defense
+fortune.loc[24]
+
+Company                     Boeing
+Sector         Aerospace & Defense
+Industry     Aerospace and Defense
+Location               Chicago, IL
+Revenue                      96114
+Profits                       5176
+Employees                   161400
+Name: 24, dtype: object
+
+
+Retrieve a group from a GroupBy object with the get_group Method
+---------------------------------------------------------------
+- get the dataframe for the given group.
+sector.get_group("Energy")
+
+	Company	Sector	Industry	Location	Revenue	Profits	Employees
+Rank							
+2	Exxon Mobil	Energy	Petroleum Refining	Irving, TX	246204	16150	75600
+14	Chevron	Energy	Petroleum Refining	San Ramon, CA	131118	4587	61500
+
+sector.get_group("Technology")
+
+	Company	Sector	Industry	Location	Revenue	Profits	Employees
+Rank							
+3	Apple	Technology	Computers, Office Equipment	Cupertino, CA	233715	53394	110000
+18	Amazon.com	Technology	Internet Services and Retailing	Seattle, WA	107006	596	230800
+
+Methods on the Groupby Object and DataFrame Columns
+-----------------------------------------------------------------
+fortune = pd.read_csv("fortune1000.csv", index_col="Rank")
+fortune.head(3)
+
+.max()
+-------
+- max applies to the first column for that group. in our example: it is 'company', max would operate on alphatical ordering
+
+sector.max()
+
+								Company	Industry	Location	Revenue	Profits	Employees
+Sector						
+Aerospace & Defense	Woodward	Aerospace and Defense	Wichita, KS	96114	7608	197200
+Apparel	Wolverine World Wide	Apparel	Winston-Salem, NC	30601	3273	65300
+
+.min()
+---------
+sector.min()
+
+					Company	Industry	Location	Revenue	Profits	Employees
+Sector						
+Aerospace & Defense	B/E Aerospace	Aerospace and Defense	Berwyn, PA	1923	-240	6955
+Apparel	Carter’s	Apparel	Atlanta, GA	2204	82	5978
+
+.sum()
+--------
+- operates on numeric columns only.
+
+sector.sum()
+
+					Revenue	Profits	Employees
+Sector			
+Aerospace & Defense	357940	28742	968057
+Apparel				95968	8236	346397
+
+
+sector.get_group("Aerospace & Defense")["Revenue"].sum()
+357940
+
+sector.get_group("Aerospace & Defense")["Profits"].sum()
+28742
+
+sector.get_group("Aerospace & Defense")["Employees"].sum()
+968057
+
+.sum() on individual column for the given group
+-------------------------------------------------
+sector["Revenue"].sum()
+
+Sector
+Aerospace & Defense              357940
+Apparel                           95968
+Business Services                272195
+Chemicals                        243897
+
+.max() on individual column for the given group
+-------------------------------------------------
+sector["Profits"].max()
+
+Sector
+Aerospace & Defense              7608
+Apparel                          3273
+Business Services                6328
+Chemicals                        7685
+Energy                          16150
+
+sector[["Profits","Employees"]].sum()
+
+					Profits	Employees
+Sector		
+Aerospace & Defense	28742	968057
+Apparel				8236	346397
+Business Services	28227	1361050
+
+Grouping by Multiple Columns
+--------------------------------------------------
+- group by sector and industry
+
+fortune = pd.read_csv("fortune1000.csv", index_col="Rank")
+fortune.head(3)
+
+- group by Sectors first and then group by Industry within each Sectors
+sectors_industry = fortune.groupby(["Sector", "Industry"])
+sectors_industry.size()   # returns a multi index series
+
+Sector               Industry                                     
+Aerospace & Defense  Aerospace and Defense                            20
+Apparel              Apparel                                          15
+Business Services    Advertising, marketing                            2
+                     Diversified Outsourcing Services                 14
+                     Education                                         3
+					 
+
+sectors_industry.sum()
+
+															Revenue	Profits	Employees
+Sector					Industry			
+Aerospace & Defense		Aerospace and Defense				357940	28742	968057
+Apparel					Apparel								95968	8236	346397
+Business Services		Advertising, marketing				22748	1549	124100
+						Diversified Outsourcing Services	64829	4305	708330
+Transportation			Trucking, Truck Leasing				35950	1910	170456
+
+The .agg() Method
+-------------------------------------------------------------
+- provides an advanced capability to perform aggregation operation selectively for specific column
+- while we are able to perform the aggregation above 
+- a dict as the arguments to .agg() method, column name for the key and aggregation function (sum/mean) for the value
+
+
+sector["Revenue"].sum()
+sector.sum()
+
+fortune = pd.read_csv("fortune1000.csv", index_col="Rank")
+
+sector = fortune.groupby("Sector")
+fortune.head(3)
+
+sector.agg({"Revenue" : "sum", "Profits" : "sum", "Employees" : "mean"})
+
+					Revenue	Profits	Employees
+Sector			
+Aerospace & Defense	357940	28742	48402.850000
+Apparel				95968	8236	23093.133333
+
+
+- apply same aggregation operation for all columns
+sector.agg(["size", "sum", "mean"])
+
+					Revenue							Profits						Employees
+					size	sum		mean			size	sum		mean		size	sum		mean
+Sector									
+Aerospace & Defense	20		357940	17897.000000	20		28742	1437.100000	20		968057	48402.850000
+Apparel				15		95968	6397.866667		15		8236	549.066667	15		346397	23093.133333
+
+- apply more than aggregation operation for specific column
+sector.agg({"Revenue" : ["sum", "mean"], "Profits" : "sum", "Employees" : "mean"})
+
+					Revenue					Profits		Employees
+					sum		mean			sum			mean
+Sector				
+Aerospace & Defense	357940	17897.000000	28742		48402.850000
+Apparel				95968	6397.866667		8236		23093.133333
+
+Iterating through Groups
+----------------------------------------------------------------------
+fortune = pd.read_csv("fortune1000.csv", index_col="Rank")
+sectors = fortune.groupby("Sector")
+fortune.head(3)
+
+		Company		Sector		Industry				Location			Revenue	Profits	Employees
+Rank							
+1		Walmart		Retailing	General Merchandisers	Bentonville, AR		482130	14694	2300000
+2		Exxon Mobil	Energy		Petroleum Refining		Irving, TX			246204	16150	75600
+
+- if we need to know the complete company row data for which the Revenue is highest for each sectors, we need to iterate and extract the complete row.
+
+- create an empty Dataframe with all the columns from fortune dataframe
+df = pd.DataFrame(columns=fortune.columns)
+df
+	Company	Sector	Industry	Location	Revenue	Profits	Employees
+	
+for sector, data in sectors:
+	highest_revenue_company_per_sector = data.nlargest(1, "Revenue")
+    df = df.append(highest_revenue_company_per_sector)
+	
+df
+
+	Company	Sector				Industry				Location		Revenue	Profits	Employees
+24	Boeing	Aerospace & Defense	Aerospace and Defense	Chicago, IL		96114	5176	161400
+91	Nike	Apparel				Apparel					Beaverton, OR	30601	3273	62600
+
+
+locations = fortune.groupby("Location")
+df = pd.DataFrame(columns=fortune.columns)
+for city, data in locations:
+	highest_revenue_company_per_city = data.nlargest(1, "Revenue")
+    df = df.append(highest_revenue_company_per_city)
+
+	Company					Sector					Industry						Location			Revenue	Profits	Employees
+138	Abbott Laboratories		Health Care				Medical Products and Equipment	Abbott Park, IL		20661	4423	74000
+169	Goodyear Tire & Rubber	Motor Vehicles & Parts	Motor Vehicles and Parts		Akron, OH			16443	307		66000
+
+
+Input and Output in pandas
+==============================================
+- how to input the raw data into pandas dataframe and export into standard format.
+
+import pandas as pd
+
+Pass a URL to the pd.read_csv Method
+--------------------------------------------
+- we can pass the complete URL of the csv file from the website instead of download every time. so that evey time we run our program will take the latest data directly from site.
+- https://opendata.cityofnewyork.us/  => search by "Baby names" => take the first search result as 'popular baby names' => click the link => veiw data => Export => right click on CSV => copy link =>  https://data.cityofnewyork.us/api/views/25th-nujf/rows.csv
+
+url = "https://data.cityofnewyork.us/api/views/25th-nujf/rows.csv"
+babynames = pd.read_csv(url)
+babynames.head(3)
+
+	Year of Birth	Gender	Ethnicity	Child's First Name	Count	Rank
+0	2011			FEMALE	HISPANIC	GERALDINE			13		75
+1	2011			FEMALE	HISPANIC	GIA					21		67
+2	2011			FEMALE	HISPANIC	GIANNA				49		42
+
+babynames["Child's First Name"]
+0        GERALDINE
+1              GIA
+2           GIANNA
+..
+27489        Isaac
+27490      Alessia
+Name: Child's First Name, Length: 27491, dtype: object
+
+- .to_frame() convert a Series to Dataframe 
+---------------------------------------------
+babynames["Child's First Name"].to_frame()
+ 
+	Child's First Name
+0	GERALDINE
+1	GIA
+..
+27489	Isaac
+27490	Alessia
+
+.to_list() convert a Series to python list
+----------------------------------------------
+babynames["Child's First Name"].to_list()
+
+['GERALDINE',
+ 'GIA',
+ 'GIANNA',
+ 'GISELLE',
+ ..]
+ 
+
+.to_dict() convert a Series to python dict. key as index label and value as the column value
+-------------------------------------------------------------------------------------------------
+
+babynames["Child's First Name"].to_dict()
+
+{0: 'GERALDINE',
+ 1: 'GIA',
+ 2: 'GIANNA',
+ ..
+}
+
+.join string method
+------------------------
+"-".join(["a", "b", "c"])
+'a-b-c'
+
+"-".join(babynames["Child's First Name"].str.title().drop_duplicates().sort_values().to_list())
+"Aahil-Aaliyah-Aarav-Aaron-Aarya-Aaryan-Aayan-Abby-Abdiel-Abdoul-Abdoulaye-Abdul....... "
+
+Export CSV File with the to_csv Method
+---------------------------------------------
+url = "https://data.cityofnewyork.us/api/views/25th-nujf/rows.csv"
+babynames = pd.read_csv(url)
+babynames.head(3)
+
+babynames.to_csv("nyc_baby.csv")
+
+- bydefault index column will get included without its header name.
+
+- to exlcude the index column.
+babynames.to_csv("nyc_baby.csv", index  = False)
+
+- export selective columns only.
+babynames.to_csv("nyc_baby.csv", index  = False, columns = ["Gender", "Ethnicity", "Child's First Name"])
+
+- encode in UTF-8
+babynames.to_csv("nyc_baby.csv", index  = False, columns = ["Gender", "Ethnicity", "Child's First Name"], encoding = "utf-8")
+
+
+Install xlrd and openpyxl Libraries to Read and Write Excel Files
+---------------------------------------------------------------------------------
+- incase you are working on a separate conda envornment other than the default i.e. 'base', we need to install the packages.
+> conda info -- envs
+
+> conda activate pandas_playground
+
+> conda install xlrd openpyxl
+
+Import Excel File into pandas with the read_excel Method
+---------------------------------------------------------------------------------
+import pandas as pd
+pd.read_excel("Data - Single Worksheet.xlsx")
+
+
+- by default if we dont pass any additional param to read_excel, pandas will load the very first worksheet of the excel to dataframe
+- pass the sheet_name, it accepts wither the index nummber or the sheet name.
+- if we want to load multiple sheets at the same time, pass them as list
+pd.read_excel("Data - Multiple Worksheets.xlsx", sheet_name=1)
+
+	First Name	Last Name	City	Gender
+0	Parker	Power	Raleigh	F
+1	Preston	Prescott	Philadelphia	F
+
+pd.read_excel("Data - Multiple Worksheets.xlsx", sheet_name=0)
+
+	First Name	Last Name	City	Gender
+0	Brandon	James	Miami	M
+1	Sean	Hawkins	Denver	M
+
+
+pd.read_excel("Data - Multiple Worksheets.xlsx", sheet_name="Data 2")
+
+	First Name	Last Name	City	Gender
+0	Parker	Power	Raleigh	F
+1	Preston	Prescott	Philadelphia	F
+
+- return a dict with key as sheet index position and value as the respective dataframe
+
+data = pd.read_excel("Data - Multiple Worksheets.xlsx", sheet_name=[0, 1])
+
+{0:   First Name Last Name           City Gender
+ 0    Brandon     James          Miami      M
+ 1       Sean   Hawkins         Denver      M
+ 2       Judy       Day    Los Angeles      F
+ 3     Ashley      Ruiz  San Francisco      F
+ 4  Stephanie     Gomez       Portland      F,
+ 1:   First Name Last Name           City Gender
+ 0     Parker     Power        Raleigh      F
+ 1    Preston  Prescott   Philadelphia      F
+ 2    Ronaldo   Donaldo         Bangor      M
+ 3      Megan   Stiller  San Francisco      M
+ 4     Bustin    Jieber         Austin      F}
+
+data[1]
+	First Name	Last Name	City	Gender
+0	Parker	Power	Raleigh	F
+1	Preston	Prescott	Philadelphia	F
+2	Ronaldo	Donaldo	Bangor	M
+3	Megan	Stiller	San Francisco	M
+4	Bustin	Jieber	Austin	F
+
+data = pd.read_excel("Data - Multiple Worksheets.xlsx", sheet_name=["Data 1", "Data 2"])
+data
+
+{'Data 1':   First Name Last Name           City Gender
+ 0    Brandon     James          Miami      M
+ 1       Sean   Hawkins         Denver      M
+ 2       Judy       Day    Los Angeles      F
+ 3     Ashley      Ruiz  San Francisco      F
+ 4  Stephanie     Gomez       Portland      F,
+ 'Data 2':   First Name Last Name           City Gender
+ 0     Parker     Power        Raleigh      F
+ 1    Preston  Prescott   Philadelphia      F
+ 2    Ronaldo   Donaldo         Bangor      M
+ 3      Megan   Stiller  San Francisco      M
+ 4     Bustin    Jieber         Austin      F}
+ 
+data["Data 1"]
+	First Name	Last Name	City	Gender
+0	Brandon	James	Miami	M
+1	Sean	Hawkins	Denver	M
+2	Judy	Day	Los Angeles	F
+3	Ashley	Ruiz	San Francisco	F
+4	Stephanie	Gomez	Portland	F
+
+- load all the sheets via passing None to sheet_name arg
+pd.read_excel("Data - Multiple Worksheets.xlsx", sheet_name=None)
+
+{'Data 1':   First Name Last Name           City Gender
+ 0    Brandon     James          Miami      M
+ 1       Sean   Hawkins         Denver      M
+ 2       Judy       Day    Los Angeles      F
+ 3     Ashley      Ruiz  San Francisco      F
+ 4  Stephanie     Gomez       Portland      F,
+ 'Data 2':   First Name Last Name           City Gender
+ 0     Parker     Power        Raleigh      F
+ 1    Preston  Prescott   Philadelphia      F
+ 2    Ronaldo   Donaldo         Bangor      M
+ 3      Megan   Stiller  San Francisco      M
+ 4     Bustin    Jieber         Austin      F}
+ 
+ 
+Import Excel File into pandas with the read_excel Method
+---------------------------------------------------------------------------------
+url = "https://data.cityofnewyork.us/api/views/25th-nujf/rows.csv"
+babynames = pd.read_csv(url)
+babynames.head(3)
+
+- extract baby boys and baby girls
+mask_boys = babynames["Gender"] == "MALE"
+baby_boys = babynames[mask_boys]
+
+mask_girls = babynames["Gender"] == "FEMALE"
+baby_girls = babynames[mask_girls]
+
+- create an excel writer
+excel_file_wr = pd.ExcelWriter("Baby_Names.xlsx")
+- to_excel does not create the file insetad set all the details.
+baby_boys.to_excel(excel_writer=excel_file_wr, index=False, sheet_name="boys", columns=["Year of Birth", "Gender", "Ethnicity"])
+baby_girls.to_excel(excel_writer=excel_file_wr, index=False, sheet_name="girls")
+- save() creates the file on disk
+excel_file_wr.save()
+
+
+Merging, Joining, and Concatenating DataFrames
+================================================================
+import pandas as pd
+
+week1 = pd.read_csv("Restaurant - Week 1 Sales.csv")
+week2 = pd.read_csv("Restaurant - Week 2 Sales.csv")
+customers = pd.read_csv("Restaurant - Customers.csv")
+foods = pd.read_csv("Restaurant - Foods.csv")
+
+week1 = pd.read_csv("Restaurant - Week 1 Sales.csv")
+	Customer ID	Food ID
+0	537			9
+1	97			4
+2	658			1
+
+
+week2 = pd.read_csv("Restaurant - Week 2 Sales.csv")
+week2
+
+	Customer ID	Food ID
+0	688			10
+1	813			7
+2	495			10
+
+customers = pd.read_csv("Restaurant - Customers.csv")
+customers
+	ID	First Name	Last Name	Gender	Company	Occupation
+0	1	Joseph	Perkins	Male	Dynazzy	Community Outreach Specialist
+1	2	Jennifer	Alvarez	Female	DabZ	Senior Quality Engineer
+2	3	Roger	Black	Male	Tagfeed	Account Executive
+
+foods = pd.read_csv("Restaurant - Foods.csv")
+foods
+
+	Food ID	Food Item	Price
+0	1		Sushi		3.99
+1	2		Burrito		9.99
+2	3		Taco		2.99
+
+
+concat()
+--------------------------------------------------------------
+
+- week1 and week2 dataframes are similar. i.e. custId to FoodId
+- use pd.concat is used to merge this 2 dataframes and create a new dataframe
+- note: index position to remain same i.e. the index level does not get new value.
+
+pd.concat(objs=[week1, week2])
+
+	Customer ID	Food ID
+0	537	9
+1	97	4
+2	658	1
+3	202	2
+4	155	9
+...	...	...
+245	783	10
+246	556	10
+247	547	9
+248	252	9
+249	249	6
+500 rows × 2 columns
+
+- see the index is not showing 500 even though total rows are 500
+
+- by default ignore_index=False, ignore_index=True generated fresh index and assign to each row.
+pd.concat(objs=[week1, week2], ignore_index=True)
+
+	Customer ID	Food ID
+0	537	9
+1	97	4
+2	658	1
+3	202	2
+4	155	9
+...	...	...
+495	783	10
+496	556	10
+497	547	9
+498	252	9
+499	249	6
+500 rows × 2 columns
+
+- .append() append one dataframe to another
+week1.append(week2) 
+
+	Customer ID	Food ID
+0	537	9
+1	97	4
+2	658	1
+3	202	2
+4	155	9
+...	...	...
+245	783	10
+246	556	10
+247	547	9
+248	252	9
+249	249	6
+500 rows × 2 columns
+
+- pass arg. ignore_index=True to ignore the old index and generate a new index.
+
+week1.append(week2, ignore_index=True)
+
+	Customer ID	Food ID
+0	537	9
+1	97	4
+2	658	1
+3	202	2
+4	155	9
+...	...	...
+495	783	10
+496	556	10
+497	547	9
+498	252	9
+499	249	6
+500 rows × 2 columns
+
+- if we need to segregate week1 data from week2 data, the 'keys' 
+accepts the name for each dataframe and return a multiindex dataframe
+
+pd.concat(objs= [week1, week2], keys=["week1", "week2"])
+
+		Customer ID	Food ID
+week1	0	537	9
+		1	97	4
+		2	658	1
+		3	202	2
+		4	155	9
+...	...	...	...
+week2	245	783	10
+		246	556	10
+		247	547	9
+		248	252	9
+		249	249	6
+500 rows × 2 columns
+
+sales.loc[("week1",)]
+
+	Customer ID	Food ID
+0	537	9
+1	97	4
+2	658	1
+3	202	2
+4	155	9
+
+sales.loc[("week2",)]
+
+	Customer ID	Food ID
+0	688	10
+1	813	7
+2	495	10
+3	189	5
+4	267	3
+
+sales.loc[("week2", 248)]
+Customer ID    252
+Food ID          9
+Name: (week2, 248), dtype: int64
+
+sales.loc[("week2", 248), "Customer ID"]
+252
+
+
+Inner Joins using dataframe1.merge(dataframe2, how, on)
+----------------------------------------------------------------
+import pandas as pd
+
+week1 = pd.read_csv("Restaurant - Week 1 Sales.csv")
+week2 = pd.read_csv("Restaurant - Week 2 Sales.csv")
+customers = pd.read_csv("Restaurant - Customers.csv")
+foods = pd.read_csv("Restaurant - Foods.csv")
+
+- get the common customers and their food ids by joining the week1 and week2 dataframes
+- merge(), 1st arg: dataframe2, how: inner/outer, on: the joining column (the column name should match in both dataframes) 
+
+week1.merge(week2, how="inner", on="Customer ID")
+
+	Customer ID	Food ID_x	Food ID_y
+0	537			9			5
+1	155			9			3
+2	155			1			3
+3	503			5			8
+4	503			5			9
+...	...	...	...
+57	945			5			4
+58	343			3			5
+59	343			3			2
+60	343			3			7
+61	621			9			6
+62 rows × 3 columns
+
+joinedinner = week1.merge(week2, how="inner", on="Customer ID")
+joinedinner.head(4)
+
+	Customer ID	Food ID_x	Food ID_y
+0	537			9			5
+1	155			9			3
+2	155			1			3
+3	503			5			8
+
+- look at the customer id 155 and understand how the inner join has worked.
+
+- change the default suffixes from _x and _y to something else.
+
+week1.merge(week2, how="inner", on="Customer ID", suffixes=[" - week1", " - week2"])
+
+	Customer ID	Food ID - week1	Food ID - week2
+0	537			9				5
+1	155			9				3
+2	155			1				3
+3	503			5				8
+
+- find out customers ordered same food item in both the weeks.
+week1.merge(week2, how="inner", on=["Customer ID", "Food ID"])
+
+	Customer ID	Food ID
+0	304			3
+1	540			3
+2	937			10
+3	233			3
+4	21			4
+5	21			4
+6	922			1
+7	578			5
+8	578			5
+
+week1[week1["Customer ID"] == 578]
+	Customer ID	Food ID
+224	578			5
+
+week2[week2["Customer ID"] == 578]
+	Customer ID	Food ID
+29	578			5
+189	578			5
+
+Outer Joins
+----------------------------------------------------------
+- week1 to be left dataframe
+- week2 to be right dataframe
+- hence the outer join here is a left outer join between week1 and week2
+-  so we will get a new dataframe where
+a) custid exists in both the dataframe
+b) foodid exists in df1 but not in df2, foodid to be null for df2
+c) foodid exists in df2 but not in df1, foodid to be null for df1
+
+- acts like a full join like in SQL which includes all rows from both dataframes
+
+week1.merge(week2, how="outer", on="Customer ID", suffixes=[" - week1", " - week2"])
+
+- by default pandas converted the int value to floar to handle the null values due to outer join
+
+	Customer ID	Food ID - week1	Food ID - week2
+0	537			9.0				5.0
+1	97			4.0				NaN
+2	658			1.0				NaN
+3	202			2.0				NaN
+4	155			9.0				3.0
+...	...	...	...
+449	855			NaN				4.0
+450	559			NaN				10.0
+451	276			NaN				4.0
+452	556			NaN				10.0
+453	252			NaN				9.0
+
+454 rows × 3 columns
+
+- indicator param adds a new columns (_merge) to signify type of outer join (both/left_only/right_only)
+
+week1.merge(week2, how="outer", on="Customer ID", suffixes=[" - week1", " - week2"], indicator = True)
+
+	Customer ID	Food ID - week1	Food ID - week2	_merge
+0	537			9.0				5.0				both
+1	97			4.0				NaN				left_only
+2	658			1.0				NaN				left_only
+3	202			2.0				NaN				left_only
+4	155			9.0				3.0				both
+...	...	...	...	...
+449	855			NaN				4.0				right_only
+450	559			NaN				10.0			right_only
+451	276			NaN				4.0				right_only
+452	556			NaN				10.0			right_only
+453	252			NaN				9.0				right_only
+
+454 rows × 4 columns
+
+merged_outer["_merge"].value_counts()
+right_only    197
+left_only     195
+both           62
+Name: _merge, dtype: int64
+
+
+merged_outer = week1.merge(week2, how="outer", on="Customer ID", suffixes=[" - week1", " - week2"], indicator = True)
+
+mask = merged_outer["_merge"] == "left_only"
+merged_outer[mask]
+
+Customer ID	Food ID - week1	Food ID - week2	_merge
+1	97		4.0				NaN				left_only
+2	658		1.0				NaN				left_only
+
+
+mask = merged_outer["_merge"].isin(["left_only", "right_only"])
+merged_outer[mask]
+
+	Customer ID	Food ID - week1	Food ID - week2	_merge
+1	97			4.0				NaN				left_only
+2	658			1.0				NaN				left_only
+...
+449	855			NaN				4.0				right_only
+450	559			NaN				10.0			right_only
+
+
+Left Joins
+---------------------------------------------------------------
+- pulls all from left dataframe + only those also exists in right dataframe.
+
+- ex: get all the food item details for sales on week 1
+
+week1.head(3)
+
+	Customer ID	Food ID
+0	537			9
+1	97			4
+2	658			1
+
+foods.head(3)
+
+	Food ID	Food Item	Price
+0	1		Sushi		3.99
+1	2		Burrito		9.99
+2	3		Taco		2.99
+
+- here left represent week1 and foods to be right
+merged_left = week1.merge(foods, how = "left", on = "Food ID")
+merged_left.head(4)
+
+	Customer ID	Food ID	Food Item	Price
+0	537			9		Donut		0.99
+1	97			4		Quesadilla	4.25
+2	658			1		Sushi		3.99
+3	202			2		Burrito		9.99
+
+- sort parm to sort on the matching column
+
+merged_left = week1.merge(foods, how = "left", on = "Food ID", sort=True)
+merged_left.head(4)
+
+	Customer ID	Food ID	Food Item	Price
+0	658			1		Sushi		3.99
+1	600			1		Sushi		3.99
+2	155			1		Sushi		3.99
+3	341			1		Sushi		3.99
+
+The left_on and right_on Parameters
+---------------------------------------------------------------
+- in the bove example, the column on which join workd, has the same name on both dataframes.
+
+- in case we have different column names on both dataframes and want to use that column for our join column, we need to use left_on to denote column name from left Df and right_on to denote column name form right Df.
+
+- while using on, since the join column name is same for both the dataframes, pandas keeps only on column, BUT in case left_on/right_on it keeps both the columns from the 2 dataframes
+
+- get the customer details purchased food in week2
+
+import pandas as pd
+
+week1 = pd.read_csv("Restaurant - Week 1 Sales.csv")
+week2 = pd.read_csv("Restaurant - Week 2 Sales.csv")
+customers = pd.read_csv("Restaurant - Customers.csv")
+foods = pd.read_csv("Restaurant - Foods.csv")
+
+customers.head(3)
+
+	ID	First Name	Last Name	Gender	Company	Occupation
+0	1	Joseph	Perkins	Male	Dynazzy	Community Outreach Specialist
+1	2	Jennifer	Alvarez	Female	DabZ	Senior Quality Engineer
+2	3	Roger	Black	Male	Tagfeed	Account Executive
+
+week2.head(3)
+
+	Customer ID	Food ID
+0	688			10
+1	813			7
+2	495			10
+
+merged_left = week2.merge(customers, how = "left", left_on = "Customer ID", right_on = "ID")
+merged_left.head(3)
+
+	Customer ID	Food ID	ID	First Name	Last Name	Gender	Company	Occupation
+0	688	10	688	Carl	Williamson	Male	Thoughtmix	Graphic Designer
+1	813	7	813	Johnny	Walker	Male	Kayveo	Developer II
+2	495	10	495	Deborah	Little	Female	Babbleblab	VP Accounting
+
+- to drop one of the join column.
+week2.merge(customers, how = "left", left_on = "Customer ID", right_on = "ID").drop("ID", axis = "columns")
+
+	Customer ID	Food ID	First Name	Last Name	Gender	Company	Occupation
+0	688	10	Carl	Williamson	Male	Thoughtmix	Graphic Designer
+
+- sort by the join column
+week2.merge(customers, how = "left", left_on = "Customer ID", right_on = "ID", sort = True).drop("ID", axis = "columns")
+
+Merging by Indexes with the left_index and right_index Parameters
+-----------------------------------------------------------------
+- to merge by index of one dataframe with a column of another dataframe
+
+import pandas as pd
+
+week1 = pd.read_csv("Restaurant - Week 1 Sales.csv")
+week2 = pd.read_csv("Restaurant - Week 2 Sales.csv")
+customers = pd.read_csv("Restaurant - Customers.csv", index_col = "ID")
+foods = pd.read_csv("Restaurant - Foods.csv", index_col = "Food ID")
+
+customers.head(3)
+
+	First Name	Last Name	Gender	Company	Occupation
+ID					
+1	Joseph	Perkins	Male	Dynazzy	Community Outreach Specialist
+2	Jennifer	Alvarez	Female	DabZ	Senior Quality Engineer
+3	Roger	Black	Male	Tagfeed	Account Executive
+
+foods.head(3)
+
+			Food Item	Price
+Food ID		
+1			Sushi		3.99
+2			Burrito		9.99
+3			Taco		2.99
+
+- merge 'Customer ID' column of week1 with 'ID' index of customers
+week1.merge(customers, how = "left", left_on = "Customer ID", right_index = True)
+
+The .join() Method
+--------------------------------------------------------------
+- like concat/append which is used to concat two dataframe row wise, join is used to add columns from another dataframe to one, provided the no. of records are same.
+
+import pandas as pd
+
+week1 = pd.read_csv("Restaurant - Week 1 Sales.csv")
+week2 = pd.read_csv("Restaurant - Week 2 Sales.csv")
+customers = pd.read_csv("Restaurant - Customers.csv")
+foods = pd.read_csv("Restaurant - Foods.csv")
+rating = pd.read_csv("Restaurant - Foods.csv")
+
+rating
+
+	Satisfaction Rating
+0	2
+1	7
+2	3
+3	7
+4	10
+...	...
+245	1
+246	2
+247	8
+248	10
+249	3
+250 rows × 1 columns
+
+week1.join(rating)
+
+	Customer ID	Food ID	Satisfaction Rating
+0	537			9		2
+1	97			4		7
+2	658			1		3
+3	202			2		7
+4	155			9		10
+...	...	...	...
+245	413			9		1
+246	926			6		2
+247	134			3		8
+248	396			6		10
+249	535			10		3
+250 rows × 3 columns
+
+- same join can be also be done using merge with left_index = True and right_index = True i.e. to join by index of both dataframes
+
+week1.merge(rating, how = "left", left_index = True, right_index = True).head(3)
+
+	Customer ID	Food ID	Satisfaction Rating
+0	537			9		2
+1	97			4		7
+2	658			1		3
+
+
+The pd.merge() Method
+---------------------------------------------------------------
+- similar like merger on dataframe, we can also call merged on pandas alias.
+
+import pandas as pd
+
+week1 = pd.read_csv("Restaurant - Week 1 Sales.csv")
+week2 = pd.read_csv("Restaurant - Week 2 Sales.csv")
+customers = pd.read_csv("Restaurant - Customers.csv")
+foods = pd.read_csv("Restaurant - Foods.csv")
+rating = pd.read_csv("Restaurant - Foods.csv")
+
+week1.head(3)
+	Customer ID	Food ID
+0	537			9
+1	97			4
+2	658			1
+
+customers.head(3)
+	ID	First Name	Last Name	Gender	Company	Occupation
+0	1	Joseph		Perkins		Male	Dynazzy	Community Outreach Specialist
+1	2	Jennifer	Alvarez		Female	DabZ	Senior Quality Engineer
+2	3	Roger		Black		Male	Tagfeed	Account Executive
+
+merged = pd.merge(left = week1, right = customers, how = "left", left_on="Customer ID", right_on="ID")
+merged.head(3)
+
+	Customer ID	Food ID	ID	First Name	Last Name	Gender	Company		Occupation
+0	537			9		537	Cheryl		Carroll		Female	Zoombeat	Registered Nurse
+1	97			4		97	Amanda		Watkins		Female	Ozu			Account Coordinator
+2	658			1		658	Patrick		Webb		Male	Browsebug	Community Outreach Specialist
+
+
+Working with Dates and Times in Datasets
+=================================================================
+- datatime module is part of the vanila python installation but does not get loaded by default, we need to explicitly import due reduce less memory usage untill it is absolutely needed.
+
+import pandas as pd
+import datetime as dt
+
+Review of Python's datetime Module
+----------------------------------------------------------------
+.date(year, month, day)
+------------------------
+dt.date(2010, 1, 20)
+datetime.date(2010, 1, 20)
+
+someday = dt.date(2010, 1, 20)
+someday.year
+someday.month
+someday.day
+
+.datetime(year, month, day, hr, min, sec) - time part is optional
+-----------------------------------------------------------------
+dt.datetime(2010, 1, 20)
+datetime.datetime(2010, 1, 20, 0, 0)
+
+dt.datetime(2010, 1, 20, 17, 13, 57)
+datetime.datetime(2010, 1, 20, 17, 13, 57)
+
+- convert to string
+str(dt.datetime(2010, 1, 20, 17, 13, 57))
+'2010-01-20 17:13:57'
+
+somedaytime = dt.datetime(2010, 1, 20, 17, 13, 57)
+somedaytime.year
+somedaytime.month
+somedaytime.day
+somedaytime.hour
+somedaytime.minute
+somedaytime.second
+
+The pandas Timestamp Object
+----------------------------------------------------------------
+- can figure out the date from the given free pattern
+- have more flexibility than the python's vanila datetime object
+
+pd.Timestamp("2015-03-31")
+Timestamp('2015-03-31 00:00:00')
+
+pd.Timestamp("2015/03/31")
+Timestamp('2015-03-31 00:00:00')
+
+pd.Timestamp("4/3/2010")
+Timestamp('2010-04-03 00:00:00')
+
+pd.Timestamp("16/3/2010")
+Timestamp('2010-03-16 00:00:00')
+
+pd.Timestamp("3/16/2010")
+Timestamp('2010-03-16 00:00:00')
+
+pd.Timestamp("2015-03-31 08:35:15")
+Timestamp('2015-03-31 08:35:15')
+
+pd.Timestamp("2015-03-31 08:35:15 PM")
+Timestamp('2015-03-31 20:35:15')
+
+pd.Timestamp(dt.datetime(2010, 1, 20, 17, 13, 57))
+Timestamp('2010-01-20 17:13:57')
+
+The pandas DateTimeIndex Object
+----------------------------------------------------------------
+dates = ["2016-01-02", "2016-04-12", "2009-09-07"]
+pd.DatetimeIndex(dates)
+
+DatetimeIndex(['2016-01-02', '2016-04-12', '2009-09-07'], dtype='datetime64[ns]', freq=None)
+
+dates = [dt.date(2016,1,2), dt.date(2016,4,12), dt.date(2009,9,7)]
+dtIndex = pd.DatetimeIndex(dates)
+
+DatetimeIndex(['2016-01-02', '2016-04-12', '2009-09-07'], dtype='datetime64[ns]', freq=None)
+
+The pd.to_datetime() Method
+----------------------------------------------------------------
+import pandas as pd
+
+pd.to_datetime("2001-04-09")
+
+pd.to_datetime(dt.date(2001, 1, 9))
+Timestamp('2001-01-09 00:00:00')
+
+pd.to_datetime(dt.datetime(2001, 1, 9, 14, 25, 20))
+Timestamp('2001-01-09 14:25:20')
+
+- very flixible and set default value if not provided instead of returning error.
+pd.to_datetime(["2001-01-03", "2014/02/08", "2016", "July 4th, 1995"])
+
+DatetimeIndex(['2001-01-03', '2014-02-08', '2016-01-01', '1995-07-04'], dtype='datetime64[ns]', freq=None)
+
+
+- when creating a series all are taken as String objects
+times = pd.Series(["2001-01-03", "2014/02/08", "2016", "July 4th, 1995"])
+
+0        2001-01-03
+1        2014/02/08
+2              2016
+3    July 4th, 1995
+dtype: object
+
+pd.to_datetime(times)
+
+0   2001-01-03
+1   2014-02-08
+2   2016-01-01
+3   1995-07-04
+dtype: datetime64[ns]
+
+dates = pd.Series(["2001-01-03", "Hello", "2022-01-23"])
+dates
+
+0    2001-01-03
+1         Hello
+2    2022-01-23
+dtype: object
+
+pd.to_datetime(dates)
+-- throw erro due to a non date string ('Hello')
+
+- pass errors="coerce", which is by default to 'raise'
+pd.to_datetime(dates, errors="coerce")
+
+0   2001-01-03
+1          NaT
+2   2022-01-23
+dtype: datetime64[ns]
+
+
+- pd.to_datetime can also convert to datetime from epoc timestamp
+pd.to_datetime([1592095319], unit="s")
+
+DatetimeIndex(['2020-06-14 00:41:59'], dtype='datetime64[ns]', freq=None)
+
+
+Create Range of Dates with the pd.date_range() Method, Part 1
+----------------------------------------------------------------
+- used to create list of dates by the provided sequence.
+- start and end accepts date in 'yyyy-mm-dd' pattern only
+- the freq param is used to tell the sequence order, if by dates, by months etc.
+- 'D' -> by days incl all weekdays
+- 'B' -> by days only with business days
+- 'W' -> one day for per week, by default take sunday
+- 
+
+times = pd.date_range(start = "2016-01-01", end = "2016-01-10", freq = "D")
+
+DatetimeIndex(['2016-01-01', '2016-01-02', '2016-01-03', '2016-01-04',
+               '2016-01-05', '2016-01-06', '2016-01-07', '2016-01-08',
+               '2016-01-09', '2016-01-10'],
+              dtype='datetime64[ns]', freq='D')
+
+times[0]		  
+Timestamp('2016-01-01 00:00:00', freq='D')
+
+
+times = pd.date_range(start = "2016-01-01", end = "2016-01-10", freq = "D")
+
+
+pd.date_range(start = "2016-01-01", end = "2016-01-10", freq = "b")
+
+DatetimeIndex(['2016-01-01', '2016-01-04', '2016-01-05', '2016-01-06',
+               '2016-01-07', '2016-01-08'],
+              dtype='datetime64[ns]', freq='B')
+			  
+pd.date_range(start = "2016-01-01", end = "2016-01-10", freq = "w")
+
+DatetimeIndex(['2016-01-03', '2016-01-10'], dtype='datetime64[ns]', freq='W-SUN')
+
+pd.date_range(start = "2016-01-01", end = "2016-01-10", freq = "w-fri")
+
+DatetimeIndex(['2016-01-01', '2016-01-08'], dtype='datetime64[ns]', freq='W-FRI')
+
+pd.date_range(start = "2016-01-01", end = "2016-01-10", freq = "6H")
+
+pd.date_range(start = "2016-01-01", end = "2016-12-31", freq = "M")
+DatetimeIndex(['2016-01-31', '2016-02-29', '2016-03-31', '2016-04-30',
+               '2016-05-31', '2016-06-30', '2016-07-31', '2016-08-31',
+               '2016-09-30', '2016-10-31', '2016-11-30', '2016-12-31'],
+              dtype='datetime64[ns]', freq='M')
+			  
+pd.date_range(start = "2020-01-01", periods = 10, freq = "D")
+
+DatetimeIndex(['2020-01-01', '2020-01-02', '2020-01-03', '2020-01-04',
+               '2020-01-05', '2020-01-06', '2020-01-07', '2020-01-08',
+               '2020-01-09', '2020-01-10'],
+              dtype='datetime64[ns]', freq='D')
+			  
+
+pd.date_range(end = "2020-01-20", periods = 10, freq = "D")
+
+DatetimeIndex(['2020-01-11', '2020-01-12', '2020-01-13', '2020-01-14',
+               '2020-01-15', '2020-01-16', '2020-01-17', '2020-01-18',
+               '2020-01-19', '2020-01-20'],
+              dtype='datetime64[ns]', freq='D')
+			  
+The .dt Accessor
+----------------------------------------------------------------
+bunch_of_dates = pd.date_range(start = "2000-01-01", end = "2000-12-31", freq = "24D")
+s = pd.Series(bunch_of_dates)
+
+s.head(3)
+
+0   2000-01-01
+1   2000-01-25
+2   2000-02-18
+dtype: datetime64[ns]
+
+s.dt.day
+
+0      1
+1     25
+2     18
+3     13
+4      6
+5     30
+6     24
+7     17
+
+s.dt.month
+
+s.dt.day_name()
+
+0      Saturday
+1       Tuesday
+2        Friday
+3        Monday
+4      Thursday
+5        Sunday
+6     Wednesday
+7      Saturday
+8       Tuesday
+9        Friday
+10       Monday
+11     Thursday
+12       Sunday
+13    Wednesday
+14     Saturday
+15      Tuesday
+dtype: object
+
+
+Install pandas-datareader Library
+-------------------------------------------------------------
+- this another useful module helps to import stock data from yahoo finance over the internet to fetch stock data of various company (ex: 'MSFT' is stock name for Microsoft, 'BB' for Blackberry), internally use the 'request' module.
+
+- was part of pandas but later spined off.
+
+conda info --envs
+
+conda activate pandas_playground
+
+conda install pandas-datareader
+
+(base) D:\work\python-lab>conda install pandas-datareader
+Collecting package metadata (current_repodata.json): done
+Solving environment: done
+
+
+shows the list of dependend lib. pre 'y' to install.
+
+Import Financial Data Set with pandas_datareader Library
+----------------------------------------------------------------
+import pandas as pd
+import datetime as dt
+from pandas_datareader import data
+
+data.DataReader(name = "MSFT", data_source = "yahoo", start = "2010-01-01")
+
+
+The pandas Timedelta Object
+----------------------------------------------------------------
+- while pandas Timestamp objcet represents a specific datetime, pandas Timedelta object represents the datetime difference of 2 Timestamp.
+- delta diff will in days
+
+time_a = pd.Timestamp("2020-03-31")
+time_b = pd.Timestamp("2020-03-20")
+
+time_a - time_b
+
+Timedelta('11 days 00:00:00')
+
+
+pd.Timestamp("2020-05-20") - pd.Timestamp("2020-03-31")
+Timedelta('50 days 00:00:00')
+
+
+pd.read_csv("ecommerce.csv")
+
+	ID	order_date	delivery_date
+0	1	5/24/98		2/5/99
+1	2	4/22/92		3/6/98
+
+- the dates here are in the fom of string
+
+
+ecom = pd.read_csv("ecommerce.csv", index_col="ID", parse_dates=["order_date", "delivery_date"])
+ecom.info()
+
+<class 'pandas.core.frame.DataFrame'>
+Int64Index: 501 entries, 1 to 997
+Data columns (total 2 columns):
+ #   Column         Non-Null Count  Dtype         
+---  ------         --------------  -----         
+ 0   order_date     501 non-null    datetime64[ns]
+ 1   delivery_date  501 non-null    datetime64[ns]
+dtypes: datetime64[ns](2)
+memory usage: 11.7 KB
+
+
+	order_date	delivery_date
+ID		
+1	1998-05-24	1999-02-05
+2	1992-04-22	1998-03-06
+4	1991-02-10	1992-08-26
+
+
+ecom["delivery_date"] - ecom["order_date"]
+ID
+1      257 days
+2     2144 days
+4      563 days
+
+
+ecom["delivery_time"] = ecom["delivery_date"] - ecom["order_date"]
+ecom.head(4)
+
+	order_date	delivery_date	delivery_time
+ID			
+1	1998-05-24	1999-02-05		257 days
+2	1992-04-22	1998-03-06		2144 days
+
+mask = ecom["delivery_time"] > "365 days"
+ecom[mask]
+
+	order_date	delivery_date	delivery_time
+ID			
+2	1992-04-22	1998-03-06		2144 days
+4	1991-02-10	1992-08-26		563 days
+
+Visualization
+===============================================================
+- use mapplotlib in order to renver the visualization.
+
+- it comes with anaconda distro. no need install separately.
+
+- need to install pandas_datareader separately
+
+- by default the matplotlib display the visualization in a popup window on jupyter notebook which sometime feel annyoing, in order to print inline, use %matplotlib inline
+
+import pandas as pd
+from pandas_datareader import data
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+- shows the below warning for pandas_datareader due to some testing deprecation hence can be ignored.
+
+D:\installations\anaconda3\lib\site-packages\pandas_datareader\compat\__init__.py:7: FutureWarning: pandas.util.testing is deprecated. Use the functions in the public API at pandas.testing instead.
+  from pandas.util.testing import assert_frame_equal
+  
+  
+  
+Use the plot Method to Render a Line Chart
+---------------------------------------------------------------
+import pandas as pd
+from pandas_datareader import data
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+data.DataReader(name = "BB", data_source="yahoo", start="2007-01-01", end="2020-12-31")
+
+			High		Low			Open		Close		Volume		Adj Close
+Date						
+2007-01-03	44.026669	41.703335	43.086666	42.849998	34739100.0	42.849998
+2007-01-04	46.316666	42.423332	42.953335	46.189999	46007700.0	46.189999
+2007-01-05	47.306667	45.166668	45.500000	47.099998	41453400.0	47.099998
+
+- by default matplotlib plot all available column from dataframe.
+- assign various color to each columns.
+- we might see one single color even though it has plotted all columns due to variance of values.
+
+bb.plot()
+
+- pass the specific column as y = "<column name>"
+
+bb.plot(y = "High")
+
+- use plot() on a single Series. produce same map as bb.plot(y = "High")
+
+bb["High"].plot()
+
+bb[["High", "Close"]].plot()
+
+
+Modifying Plot Aesthetics with matplotlib Templates
+----------------------------------------------------------------
+import pandas as pd
+from pandas_datareader import data
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+plt.style.available
+
+['bmh',
+ 'classic',
+ 'dark_background',
+ 'fast',
+ 'fivethirtyeight',
+ 'ggplot',
+ 'grayscale',
+ 'seaborn-bright',
+ 'seaborn-colorblind',
+ 'seaborn-dark-palette',
+ 'seaborn-dark',
+ 'seaborn-darkgrid',
+ 'seaborn-deep',
+ 'seaborn-muted',
+ 'seaborn-notebook',
+ 'seaborn-paper',
+ 'seaborn-pastel',
+ 'seaborn-poster',
+ 'seaborn-talk',
+ 'seaborn-ticks',
+ 'seaborn-white',
+ 'seaborn-whitegrid',
+ 'seaborn',
+ 'Solarize_Light2',
+ 'tableau-colorblind10',
+ '_classic_test']
+ 
+ 
+ex: fivethirtyeight is very popular template.
+
+- .use() method accepts a single value in string.
+
+plt.style.use("fivethirtyeight")
+gs.plot(y = "High")
+
+
+plt.style.use("ggplot")
+gs.plot(y = "High")
+
+
+Creating Bar Graphs to Show Counts
+----------------------------------------------------------------
+import pandas as pd
+from pandas_datareader import data
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+data.DataReader(name = "BB", data_source="yahoo", start="2007-01-01", end="2020-12-31")
+
+			High		Low			Open		Close		Volume		Adj Close
+Date						
+2007-01-03	44.026669	41.703335	43.086666	42.849998	34739100.0	42.849998
+2007-01-04	46.316666	42.423332	42.953335	46.189999	46007700.0	46.189999
+2007-01-05	47.306667	45.166668	45.500000	47.099998	41453400.0	47.099998
+
+
+def rank_performance(stock_price):
+    if stock_price <= 10:
+        return "Poor"
+    elif stock_price <= 50:
+        return "Satisfactory"
+    else:
+        return "Stellar"
+
+bb["Close"].apply(rank_performance)
+
+
+bb["Close"].apply(rank_performance).value_counts().plot()
+
+- shows the bar chart in vertical format
+bb["Close"].apply(rank_performance).value_counts().plot(kind = "bar")
+
+
+
+- shows the bar chart in horizontal format using 'barh'
+bb["Close"].apply(rank_performance).value_counts().plot(kind = "barh")
+
+
+Creating Pie Charts to Represent Proportions
+----------------------------------------------------------------
+import pandas as pd
+from pandas_datareader import data
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+data.DataReader(name = "BB", data_source="yahoo", start="2007-01-01", end="2020-12-31")
+
+			High		Low			Open		Close		Volume		Adj Close
+Date						
+2007-01-03	44.026669	41.703335	43.086666	42.849998	34739100.0	42.849998
+2007-01-04	46.316666	42.423332	42.953335	46.189999	46007700.0	46.189999
+2007-01-05	47.306667	45.166668	45.500000	47.099998	41453400.0	47.099998
+
+
+- how many of the stock below average and how many of stock price comes above average for 'close; column.
+
+
+def rank_performance(stock_price):
+	if stock_price >= 34.234445:
+		return "Above Average"
+	else:
+		return "Below Average"
+
+bb["Close"].apply(rank_performance)
+
+bb["Close"].apply(rank_performance).value_counts()
+
+bb["Close"].apply(rank_performance).value_counts().plot(kind = "pie")
+
+- to show legend
+bb["Close"].apply(rank_performance).value_counts().plot(kind = "pie", legend = True)
+
+
+
+Options and Settings in pandas
+================================================================
+import pandas as pd
+import numpy as np
+
+Changing pandas Options with Attributes and Dot Syntax
+----------------------------------------------------------------

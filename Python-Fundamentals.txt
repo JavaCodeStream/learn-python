@@ -1,0 +1,1981 @@
+Install Python
+----------------
+Install Python 3.
+Install Editor Atom.io
+
+Chapter:1
+-	python has reserved words (ex: list) which cant be used for variables names.
+- Constants: must start with characters or _ underscore.
+- Operator presendence: parenthesis -> power -> division -> multiplication -> addition 
+-> (for all other operation got left to right)
+- Python knows the variable type b its own.
+ex: 
+x = 1
+s = 'hello'
+>> type(x)
+>> type(s)
+>> type('hello')
+>> type(100) -- type(1.0)
+movie: office space (why we dont use floating point for money)
+- type conversion:
+>>> print(float(99) + 100) -> 199.0
+- Integer division
+>>> print(9/2) --> 4.5 (python3) but 4 (python2)
+>>> print(99.0/100.0) --> 0.99 (python3) but 0 (python2)
+
+- String Conversion
+>> sval = '123'
+>> type(sval) -> str
+>> print(sval + 1) -- error
+>> ival = int(sval)
+>> type(ival) -- int
+>> print(ival + 1) -- 124
+>> niv = int('hello') -- error
+
+- User Input => input() function to take the user input data from console.
+>> nam = input('Who are you?')
+>> print('Welcome', nam) --> welcome sandip (every comma in print statement adds a space)
+- commants: anything after # is ignored by python.
+
+- 'is' and 'is not' is also operators in python and similar to 
+= and != but these are stronger and usually we use these for 
+Boolean(True/False) and None comparison.
+
+- Defining a function creates a variable with the same name.
+>>> print(print_lyrics)
+<function print_lyrics at 0xb7e99e9c>
+>>> print(type(print_lyrics))
+<class 'function'>
+
+- to know all function of a class use dir
+>>> stuff = "Hello world"
+>>> type(stuff)
+<class 'str'>
+>>> dir(stuff)
+['capitalize', 'lower' ....]
+
+Usage of various functions of Str class:
+
+- str.find()
+-------------
+data = "From abc@yahoo.com Sat Jan  5 09:14:30 2020"
+atpos = data.find("@")
+print(atpos) -> 7
+sppos = data.find(' ', atpos)
+print(sppos) -> 14
+domain = data[atpos+1 : sppos]
+print(domain) -> yahoo.com
+	
+- str.split()
+---------------
+data = "From abc@yahoo.com Sat Jan  5 09:14:30 2020"
+words = data.split()
+email = words[1]
+domain = email.split("@")[1]
+	
+- using regEx
+	data = "From abc@yahoo.com Sat Jan  5 09:14:30 2020"	
+	domain = re.findall('@([^ ]*)', data)
+	domain = re.findall('^From .*@([^ ]*)', data)
+
+- dictionary
+dic = {'chuck' : 1, 'fred' : 42, 'jan' : 100}
+for k,v in dic.items() :
+	print(k, v)
+	
+ - use keys() to get list of all keys, values() to get the list of all
+ values, items() to get all items key,val as in the form of tuples within a list
+ 
+ - loop through dictionary
+	for x in dic :
+		print(x, dic[x])
+		
+- regEx
+Python Regular Expression Quick Guide
+
+^        Matches the beginning of a line
+$        Matches the end of the line
+.        Matches any character
+\s       Matches whitespace
+\S       Matches any non-whitespace character
+*        Repeats a character zero or more times
+*?       Repeats a character zero or more times 
+         (non-greedy)
++        Repeats a character one or more times
++?       Repeats a character one or more times 
+         (non-greedy)
+[aeiou]  Matches a single character in the listed set
+[^XYZ]   Matches a single character not in the listed set
+[a-z0-9] The set of characters can include a range
+(        Indicates where string extraction is to start
+)        Indicates where string extraction is to end
+
+==============================================
+
+Python regEx
+
+needs ot import the re module.
+
+import re
+1. re.search() --> return True/False if the regEx match found.
+ex: 
+is_found = re.search('\S+@\S+', s)
+re.search('^X\S*: [0-9.]+', line)
+
+2. re.findall() -> extract the substring netched with the regEx pattern.
+ex: 
+lst = re.findall('\S+@\S+', s)
+lst = re.findall('[a-zA-Z0-9]\S+@\S+[a-zA-Z]', line)
+
+3. combining the search and findall via parentheses.
+ex:
+x = re.findall('^X\S*: ([0-9.]+)', line)
+
+
+
+Character matching in regular expressions
+------------------------------------
+
+import re
+
+line.find()
+
+re.search() return True/False if there is a match found as per the regEx.
+
+Search for lines that start with 'F', followed by 2 characters, followed by 'm:'
+import re
+
+re.search('^From:', line) 
+re.search('^F..m:', line)
+re.search('From:', line) to accomplish the same result using line.find('From:')
+
+Search for lines that start with From and have an at sign (From: stephen.marquard@uct.ac.za)
+
+import re
+re.search('^From:.+@', line):
+
+
+line1 = 'X-DSPAM-Result: Innocent' 
+line2 = 'X-DSPAM Result: Innocent' 
+=> re.search('^X.*:', line1) -> True
+=> re.search('^X-\S+:', line2) -> False
+=> re.search('^X-\S+:', line1) -> True
+
+
+Extracting data using regular expressions (findall())
+-------------------------------------------------------
+If we want to extract data from a string in Python we can use the findall() method to extract all of the substrings which match a regular expression.
+
+extract anything that looks like an email address from any line regardless of format
+
+import re
+s = 'A message from csev@umich.edu to cwen@iupui.edu about meeting @2PM'
+lst = re.findall('\S+@\S+', s)  -> ['csev@umich.edu', 'cwen@iupui.edu']
+
+The findall() method searches the string in the second argument and returns a list of all of the strings that look like email addresses.
+
+
+# Search for lines that have an at sign between characters The characters must be a letter or number
+import re
+hand = open('mbox-short.txt')
+for line in hand:
+    line = line.rstrip()
+    x = re.findall('[a-zA-Z0-9]\S+@\S+[a-zA-Z]', line)
+    if len(x) > 0:
+        print(x)
+
+['wagnermr@iupui.edu']
+['cwen@iupui.edu']
+['postmaster@collab.sakaiproject.org']
+
+# Search for lines that start with 'X' followed by any non whitespace characters and ':' followed by a space and any number.The number can include a decimal.
+ex:
+X-DSPAM-Confidence: 0.8475
+X-DSPAM-Probability: 0.0000
+X-DSPAM-Confidence: 0.6178
+X-DSPAM-Probability: 0.0000
+
+import re
+re.search('^X\S*: [0-9.]+', line)
+
+
+Combining searching and extracting
+------------------------------------
+Parentheses are another special character in regular expressions. When you add parentheses to a regular expression, they are ignored when matching the string. But when you are using findall(), parentheses indicate that while you want the whole expression to match, you only are interested in extracting a portion of the substring that matches the regular expression.
+
+# Search for lines that start with 'X' followed by any non whitespace characters and ':' followed by a space and any number. The number can include a decimal. Then print the number if it is greater than zero.
+import re
+x = re.findall('^X\S*: ([0-9.]+)', line)
+
+o/p:
+['0.8475']
+['0.0000']
+['0.6178']
+
+Instead of calling search(), we add parentheses around the part of the regular expression that represents the floating-point number to indicate we only want findall() to give us back the floating-point number portion of the matching string.
+
+ex: From stephen.marquard@uct.ac.za Sat Jan  5 09:14:16 2008
+wanted to extract the hour of the day for each line
+# Search for lines that start with From and a character followed by a two digit number between 00 and 99 followed by ':' Then print the number if it is greater than zero
+
+import re
+x = re.findall('^From .* ([0-9][0-9]):', line)
+
+o/p:
+['09']
+['18']
+
+
+Unicode characters
+======================
+ord() -> prints the numeric value of a simple ASCII character.
+
+print(ord('H')) -> 72
+
+
+Python Data types:
+===================
+int - Integers
+float - Floating point
+str - Strings
+
+Python Data structures:
+==========================
+list - Lists i.e. ordered sequence of objects [10, "hello", 100.3]
+dict - Dictionary i.e. map in java {"mykey":"myval","age":30}
+tup - Tuples  i.e. ordered immutable sequence of objects. like list but with in (10, "hello", 100.3)
+set - Set i.e. unordered collection of unique objects {"a", "b"}
+bool - Boolean i.e. True or False
+
+String
+======
+within single quotes or double quotes
+'hello'
+"hello"
+"I'm going to run" # mix of single and double quotes
+
+print("hello")
+
+escape character
+-----------------
+print("hello \n world") # python escaping the char n with \
+print("hello \t world") 
+
+len("I am")
+4
+
+Indexing reverese indexing and slicing
+----------------------------------------
+mystr = "Hello world"
+
+Hello Ram
+012345678 # index
+0-8-7-6-5-4-3-2-1 # reverse index -1 -> 'm', -3 -> 'a' etc..
+
+mystr[0]
+'H'
+
+mystr[8]
+'r'
+
+mystr[-3]
+'r'
+
+str[startPos:stopPos:stepSize] 
+# note: startPos is include. stopPos is exclude
+
+mystr[2:]
+'llo world'
+
+mystr[:3]
+'Hel'
+
+mystr[1:4]
+'ell'
+
+mystr[::] # same as printing the string itself
+'Hello world'
+
+mystr[::2] # jumping every 2nd char mystr[::2] to jump every 3rd char
+'Hlowrd'
+
+mystr[::-1] # this will essentially reverse the string nice trick
+'dlrow olleH'
+
+
+String properties and methods
+------------------------------
+str object is immutable.
+name = 'sandip'
+name[0] = 'S' # error we cant modify a string
+
+name2 = 'S' + name[1:] # string concatenation using + operator
+'Sandip'
+
+letter = 'z'
+letter * 10 # string multiplication
+'zzzzzzzzzz'
+
+String methods
+----------------
+in jupyter, type name.<tab> will show all available methods.
+
+name.upper() or name.lower()
+'SANDIP'
+
+- str.split()
+---------------
+data = "From abc@yahoo.com Sat Jan  5 09:14:30 2020"
+words = data.split() # space is default separator
+email = words[1]
+domain = email.split("@")[1]
+
+print formatting with .format()
+--------------------------------
+print('The {} {} {}'.format('fox', 'brown', 'quick')
+
+The fox brown quick
+
+print('The {2} {1} {0}'.format('fox', 'brown', 'quick')
+
+The quick brown fox
+
+print('The {q} {b} {f}'.format(f='fox', b='brown', q='quick')
+
+The quick brown fox
+
+result = 100/777
+0.1287001287001287
+
+print('The resuly was {r}'.format(r=result))
+The resuly was 0.1287001287001287
+
+print('The resuly was {r:1.3f}'.format(r=result))
+The resuly was 0.129
+
+print('The resuly was- {r:10.3f}'.format(r=result)) # padding
+The resuly was-            0.129
+
+name='Jose'
+print(f'Hello, {name}') # fString intriduced in python ver 3.6
+
+name = 'Sam'
+age = 30
+print(f'{name} is {age} years old.')
+
+
+Data structure: Lists
+=========================
+my_list = [1,2,3]
+my_list = ['STRING', 100, 23.3]
+len(my_list)
+3
+
+my_list = ['one', 'two', 'three']
+my_list[0]
+'one'
+my_list[1:]
+['two', 'three']   # sicing for list works same as like with String
+
+another_list = ['four']
+new_list = my_list + another_list # list concatenation
+['one', 'two', 'three', 'four']
+
+new_list[0] = 'ONE' # change a list
+new_list
+['ONE','one', 'two', 'three', 'four'] 
+
+new_list.append('five')
+['ONE','one', 'two', 'three', 'four', 'five']
+
+new_list.pop() # remove item from end of the list and return the item
+by default the index pos is -1 and via revres indexing it removes the last item
+'five'
+
+new_list
+['ONE','one', 'two', 'three', 'four']
+
+new_list.pop(0) # remove for a specific item by index pos.
+'ONE'
+
+new_list
+['one', 'two', 'three', 'four']
+
+new_list = ['a','d','c','b','e']
+new_list.sort()
+new_list
+['a','b','c','b','e']
+
+my_sorted_list =  new_list.sort() # sort does not return anything
+type(my_sorted_list)
+NoneType
+
+new_list.reverese() # inline reverse the same list
+['e','d','c','b','a']
+
+Dictionary
+============
+unordered key-val pair
+{'key1':'value1', 'key2':'value2'}
+
+price_lookup = {'apple':2.99, 'orange':1.99, 'milk':5.88}
+price_lookup['apple']
+2.99
+
+d = {'k1':123, 'k2':[0,1,2], 'k3':{'insidekey':100}}
+d['k2']
+[0,1,2]
+d['k2'][2]
+2
+
+d['k3']['insidekey']
+100
+
+d = {'k1':['a','b','c']}
+d['k1'][2].upper()
+'C'
+
+add into dic
+--------------
+d = {'k1':100,'k2':200}
+d['k3'] = 300
+d
+{'k1':100,'k2':200,'k3':300}
+
+update
+-------
+d['k1'] = 'NEW VAL'
+d
+{'k1':'NEW VAL','k2':200,'k3':300}
+
+d.keys() # return all keys
+dict_keys(['k1','k2','k3'])
+
+d.values()
+dict_keys(['NEW VAL',200,300])
+
+d.items() # returns the pair i.e. in tuples
+dict_items([('k1','NEW VAL'), ('k2', 200), ('k3', 300)])
+
+Tuples
+========
+very similar to lists in python, but the tuple is immutable i.e. we can't modify items of tuples and the items are within () instead of []
+
+Tuples are not used very often due to less methods available than Lists
+
+t = (1,2,3)
+(1,2,3)
+
+t = ('one', 2, 3.1)
+t[0]
+'one'
+
+t[-1]
+3.1
+
+t = ('a', 'a', b')
+t.count('a')
+2
+
+t.index('a') # index loc that occurs very firt time
+0
+
+t[0] = 'A' # not possible for tuple
+error....
+
+
+Sets
+=====
+unordered but unique
+
+myset = set() # empty set
+
+myset.add(1) # looks like a dic due to its {} curly braces
+{1}
+
+myset.add(2)
+{1,2}
+
+myset.add(2) # unique
+{1,2}
+
+mylist = [1,1,1,1,1,2,2,2,2,3,3]
+myset_converted_from_list = set(mylist) # convert list to set
+{1,2,3}
+
+Booleans (bool) in Python
+===========================
+True/False.. important for conditional control flow
+
+1 > 2
+False
+
+1 == 1
+True
+
+None type
+===========
+b = None
+b # printing b will nort show anything
+
+File I/O
+==========
+
+Create a test file in Jupyter
+
+%%writefile myfile.txt
+Hello this is a text file
+this is the second line
+this is the third line
+
+myfile = open('myfile.txt')
+
+pwd # shows the curent working dir of Jupyter
+'C:\\Users\sandip\\python'
+
+myfile.read() # returns the entire content, new lines are separated with \n
+'Hello this is a text file\nthis is the second line\nthis is the third line'
+
+myfile.read() # second time returns empty since th cursor went to eof
+''
+
+myfile.seek(0) # reset the cursor to the begining of the file
+contents = myfile.read()
+
+myfile.seek(0) 
+myfile.readlines() # read line by line and returns a list of all the lines
+['Hello this is a text file\n'
+'this is the second line\n'
+'this is the third line']
+
+myfile = open('C:\\Users\\UserName\\Folder\\test.txt') # to access a file stored on any other location that the python notebook\
+
+myfile.close()
+
+with open('myfile.txt') as my_new_file: # here we dont need to close the file
+	contents = my_new_file.read()
+	
+# to access the python doc like java doc for any function, keep the mouse cursor on the functio and <shift+tab>
+
+with open('myfile.txt', mode='r') as my_new_file: # read mode`
+	contents = my_new_file.read()
+
+with open('myfile.txt', mode='w') as my_new_file: # write mode`
+	contents = my_new_file.read()
+ERROR...
+
+available modes:
+mode='r' - read only
+mode='w' - write only (will overwrite files or create new)
+mode='a' - append only
+mode='r+' - read and write
+mode='w+' - read and write (overwrite existing file or create new)
+
+with open('myfile.txt', mode='r') as my_new_file: # read mode`
+	print(my_new_file.read())
+	
+with open('myfile.txt', mode='a') as my_new_file: # append mode`
+	my_new_file.write('\nFour on Fourth')
+with open('myfile.txt', mode='r') as my_new_file: # read mode`
+	print(my_new_file.read())
+	
+Hello this is a text file
+this is the second line
+this is the third line
+Four on Fourth
+
+with open('myfile2.txt', mode='w') as f: 
+	f.write('I created this file')
+with open('myfile2.txt', mode='r') as f:
+	print(f.read())
+	
+Comparison operators (and, or , not)
+=======================================
+2.0 == 2
+True
+
+3 != 3
+False
+
+1 < 2 < 3 # chaining but bad practice
+True
+
+1 < 2 and 2 > 3
+False
+
+1 < 2 or 2 > 3
+True
+
+1 == 1
+True
+not(1 == 1)
+False
+
+not 400 > 500
+True
+
+If else
+===========
+use colon and indentation in python
+
+if some_condition :
+	execute some code
+else :
+	do something different
+	
+if some_condition :
+	execute some code
+elif :
+	do something different
+else:
+	else do this
+	
+if True:
+	print('hello.. its true')
+	
+hungry = True
+if hungry:
+	print('i am hungry')
+else:
+	print('not hungry')
+	
+For loop
+===========
+syntex
+---------
+my_iterable = [1,2,3]
+for item_name in my_iterable:
+	print(item_name)
+	
+mylist = [1,2,3,4,5,6,7,8,9,10]
+
+for num in mylist:
+	print(num)
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+for num in mylist:
+	if num % 2 == 0:
+		print(num)
+	else:
+		print(f'Odd num: {num}')
+		
+list_sum = 0
+for num in mylist:
+	list_sum = list_sum + num
+	
+print(list_sum)
+55
+
+for char in 'Hello World':
+	print(char)
+	
+tup = (1,2,3)
+for t in tup:
+	print(t)
+
+mylist = [(1,2),(3,4),(5,6)]
+for item in mylist:
+	print(item)
+
+(1,2)
+(3,4)
+(5,6)
+
+for (x,y) in mylist:
+	print(f'x: {x} -- y: {y}')
+	
+for x,y in mylist:
+	print(f'x: {x} -- y: {y}')
+
+x: 1 -- y: 2
+x: 3 -- y: 4
+x: 5 -- y: 6
+
+d = {'k1':1, 'k2':2,'k3':3}
+for item in d.items():
+	print(item)
+
+('k1', 1)
+('k2', 2)
+('k3', 3)
+
+for k,v in d.items():
+	print(f'k={k} - v={v}')  # there is not gurantee of the order since dic is unordered
+
+while loop
+============
+x = 0
+while x < 5:
+	print('x', x)
+	x = x + 1 # as same as x += 1
+
+for infine loop by mistake in python kernel -> interrupt/restart
+
+while x < 5:
+	print('x', x)
+	x = x + 1
+else:
+	print('x is not less than 5')
+	
+break, continue, pass (does nothing at all)
+------------------------------------------------
+x = [1,2,3]
+for i in x:
+	pass
+	
+pass: used as a placeholder in case we dont want to do anything since we can't keep the line empty as python will thorw error.
+
+for letter in 'i am sandip'
+	if letter == 'a'
+		continue
+	print(letter)
+	
+range
+------
+for num in range(10):
+	print(num)
+
+1
+2
+.
+.
+10
+
+for num in range(2,10):
+	print(num)
+
+2
+3
+.
+.
+10
+
+enumerate, return the index zipeed with the letter in tuple
+--------------------------------------------------------------
+word = 'abcde'
+for item in enumerate(word):
+	print(item)
+	
+mylist1 = [1,2,3]
+mylist2 = ['a','b','c']
+mylist3 = [100,200,300]
+zip(mylist1, mylists2)
+
+for item in zip(mylist1, mylists2):
+	print(item)
+	
+(1, 'a')
+(2, 'b')
+(3, 'c')
+
+for item in zip(mylist1, mylists2, mylist3):
+	print(item)
+(1, 'a', 100)
+.
+.
+
+in operator to check if something is in a list
+------------------------------------------------
+'x' in [1,2,3]
+False
+
+'mykey' in {'mykey':123}
+True
+
+d = {'mykey':123}
+123 in d.values()
+True
+
+min/max
+-----------
+min([1,2,3,4,5,6])
+1
+max([1,2,3,4,5,6,7])
+7
+
+importing a function from built-in library. hit <tab> after import to see list of all available functio of the library. here random is a lib and shuffle is a function
+---------------------------------------------
+from random import shuffle
+
+mylist = [1,2,3,4,5,6,7,8]
+shuffle(mylist)
+[4,3,5,6,7,1,2]
+shuffle(mylist)
+[2,3,5,7,6,1,4]
+
+from random import randint
+randint(0,100) # some random integer between 0 and 100
+99
+
+accept user input in the form of string
+===========================================
+res = input('enter a number here: ')
+'30'
+int(res) # cast to int
+30
+res = int(input('enter a number here: '))
+30
+
+List comprehension
+======================
+mystring = 'hello'
+mylist = []
+for letter in mystring:
+	mylist.append(letter)
+	
+['h','e','l','l','o']
+
+using list comprehension. letter and letter variable should match
+mylist = [letter for letter in mystring]
+['h','e','l','l','o']
+
+mylist = [x for x in 'hello']
+['h','e','l','l','o']
+
+mylist = [num*2 for num in range(0,10)]
+[0,2,4,6,..]
+
+mylist = [num*2 for num in range(0,10) if x%2==0]
+[2,4,6]
+
+Methods and Functions
+========================
+mylist = [1,2,3]
+mylist.append(4)
+mylist.insert()
+
+def name_of_function(name):
+	'''
+		doc of function
+	'''
+	print("Hello " + name)
+
+def add_func(num1, num2): 
+	return num1+num2
+	
+default arguments
+-----------------------
+def say_hellp(name='NAME'):
+	print('hello ' + name)
+
+say_hello()
+hello NAME
+
+def add(n1, n2):
+	return n1+n2
+
+def dog_check(dogStr): 
+	return 'dog' in dogStr.lower()
+	
+*args (arguments) and **kwargs (keyword arguments)
+----------------------------------------------------
+*args converts the arguments as Tuples inside the functions
+**kwargs converts the arguments as dic 
+
+*args
+------
+def myfunc_add(*args): # the variable name can be anything like *abc but convention is to use *args
+	print(args)
+
+myfunc_add(40,50,60,70,80)
+(40,50,60,70,80) # a tuple
+
+def myfunc_add(*args):
+	for item in args:
+		print(item)
+
+def myfunc_add(*args):
+	return sum(args) * 0.0.5
+
+**kwargs
+----------
+# the variable name can be anything like **abc but convention is to use **kwargs
+def myfunc(**kwargs):
+	print(kwargs)
+	
+myfunc(fruit = 'apple', veggie = 'lettuce')
+{'fruit':'apple', 'veggie':'lettuce'}
+
+def myfunc(**kwargs):
+	print(kwargs)
+	if 'fruit' in kwargs:
+		print('My fruit of choice is {}'.format(kwargs['fruit']))
+	else:
+		print('no fruit found')
+
+myfunc(fruit = 'apple', veggie = 'lettuce')
+My fruit of choice is apple
+
+# follow the order of all the args then the kwargs
+def myfunc(*args, **kwargs):
+	print('I would like {} {}'.format(args[0], kwargs['food'])
+	
+myfunc(10,20,30,fruit='orage',food='eggs',animal='cat')
+I would like 10 eggs
+
+Lambda expression, built in functions like Map and Filter
+============================================================
+map
+---
+
+map<shift+tab> --> to checkout the documentation. **2 is power of 2
+def square(num):
+	return num**2
+
+my_nums = [1,2,3,4,5]
+
+map(square, my_nums)
+# it would print some thing like the address of the map function
+
+# to store the result in a list. IMPORTANT to NOTE is we pass the function name as an argument to the map function.
+list(map(square, my_nums))
+[1,4,9,16,25]
+
+def slpicer(mystr):
+	if len(mystr)%2 == 0;
+		return 'EVEN'
+	else:
+		return 'ODD'
+		
+names = ['Andy', 'Eve', 'Sally']
+list(map(splicer, names))
+
+
+# convert to string from a range of ints
+map(str, range(100))
+
+
+filter
+-------
+filter<shift+tab> --> to checkout the documentation.
+
+# this function has to return True/False
+def check_even(num):
+	return num%2 == 0
+
+mynumc = [1,2,3,4,5,6]
+list(filter(check_even, mynums))
+[2,4,6]
+
+for n in filter(check_even, mynums):
+	print(n)
+
+2
+4
+6
+
+
+lambda with map
+-----------------
+lambda is used for anonymous function to be used once. use 'lambda' keyword
+
+square = lambda num: return num ** 2
+
+# return not needed since lambda assumes anything on the righ side of : will be returned.
+square = lambda num: num ** 2 
+square(5)
+25
+
+list(map(lambda num: num **2, mynums))
+[1,4,9,16,25]
+
+
+lambda with filter
+-------------------
+isEven = lambda num:num%2 == 0
+isEven(8)
+True
+
+list(filter(lambda num:num%2 == 0, mynums))
+[2,4,6]
+
+names = ['Andy', 'Eve', 'Sally']
+list(map(lambda x:x[0], names))
+['A', 'E', 'S']
+
+
+Nested statement
+======================
+name = 'This is a global string'
+
+def greet():
+	name = 'Sammy'
+	def hello(): 
+		print('Hello, ' + name)
+		
+	hello()
+
+greet()
+Hello, Sammy
+
+Scope of variables Local vs Global
+-----------------------------------
+local scope
+------------
+x = 50
+def func():
+	print(f'x is {x}')
+	
+	# local re-assignment of a local variable
+	x = 200
+	print(f'I just locally changed x to {x}')
+	
+x is 50
+I just locally changed x to 200
+
+
+access global variable inside a function
+-----------------------------------------
+x = 50
+def func():
+	global x
+	print(f'x is {x}')
+	
+	# local re-assignment of a local variable
+	x = 200
+	print(f'I just locally changed GLOBAL x to {x}')
+	
+x is 50
+I just locally changed GLOBAL x to 200
+
+
+Object Oriented Programming
+==============================
+class and methods
+-------------------
+define a class using the 'class' keyword. camel case for class names
+__init__ looks lot like a function and is called a method since it is within a
+class or objects.
+__init__ is like a constructor in java, always 1st args is self
+self is like this in java, to refer the same objects
+pass self to other methods of the class to tell python to connect it to the class and access its params.
+
+class NameOfClass():
+	def __init__(self, param1, param2):
+		self.param1 = param1
+		self.param2 = param2
+	
+	def some_method(self):
+		print(self.param1)
+		
+
+Collecyion class: list, set
+
+
+ex:
+class Sample():
+	pass
+	
+mu_sample = Sample()
+type(my_sample)
+__main__.Sample
+
+
+class Dog():
+	def __init__(self, breed, name, spots):
+		# assign the arg using self.attribute_name
+		self.breed = breed
+		self.name = name
+		# True/False does it have spots?
+		self.spots = spots
+
+my_dog = Dog(breed='Lab', name='Sammy', spots=False)
+type(my_dog)
+__main__.Dog
+
+my_dog.breed
+'Lab'
+my_dog.name
+'Sammy'
+my_dog.spots
+False
+
+methods
+--------
+class Dog():
+	# class object attribute. same for any instance of a class. 
+	# dont use self since self refer to a specific instance of the class
+	species = 'mamal'
+	
+	def __init__(self, breed, name, spots):
+		# assign the arg using self.attribute_name
+		self.breed = breed
+		self.name = name
+		# True/False does it have spots?
+		self.spots = spots
+
+
+my_dog = Dog(breed='Lab', name='Sammy', spots=False)
+type(my_dog)
+
+my_dog.species
+'mamal'
+
+class Circle():
+	# class object attribute
+	pi = 3.14
+	def __init__(self, radius=1):
+		self.radius = radius
+		# can access the class object using the name of the class i.e. Circle.pi
+		self.area = radius*radius*self.pi
+	
+	def get_circumference(self, radius):
+		return self.radius * self.pi * 2
+		
+my_circle = Circle()
+my_circle..pi
+3.14
+my_circle.radius
+1
+my_circle = Circle(10)
+my_circle.radius
+10
+my_circle.get_circumference()
+my_circle.get_circumference(20)
+my_circle.area
+
+Class Inheritance and Polymorphism
+---------------------------------------
+Inheritance 
+------------
+class Animal():
+	def __init__(self):
+		print('ANIMAL CREATED')
+		
+	def who_am_i(self):
+		print('I AM AN ANIMAL')
+		
+	def eat(self):
+		print('I AM EATING')
+		
+class Dog(Animal):
+	def __init__(self):
+		Animal.__init__(self)
+		print('Dog Created')
+		
+	def who_am_i(self):
+		print('I am a dog')
+		
+	def bark():
+		print('Woof!')
+		
+Dog mydog = Dog()
+ANIMAL CREATED
+Dog Created
+
+mydog.who_am_i()
+I am a dog
+
+mydog.eat()
+I AM EATING
+
+Polymorphism
+--------------
+class Dog():
+	def __init__(self):
+		self.name = name
+	
+	def speak(self):
+		return self.name + " says woof!"
+		
+class Cat():
+	def __init__(self):
+		self.name = name
+	
+	def speak(self):
+		return self.name + " says meow!"	
+
+
+niko = Dog('Niko')
+felix = Cat('Felix')
+
+print(niko.speak())
+print(felix.speak())
+
+for pet in [niko, felix]
+	print(type(pet))
+	print(pet.speak())
+	
+def pet_speak(pet):
+	print(pet.speak())
+	
+
+class Animal():
+	def __init__(self, name):
+		self.name = name
+	
+	def speak(self):
+		raise NotImplementedError('Subclass must implement this abstract method !')
+		
+myanimal = Animal('fred')
+myanimal.speak()
+Error.. Traceback
+
+
+class Dog(Animal):
+	def speak(self):
+		return self.name + " says woof!"	
+
+class Dog(Animal):
+	def speak(self):
+		return self.name + " says meow!"	
+
+fido = Dog('Fido')
+fido.speak()
+
+isis = Cat('Isis')
+isis.speak()
+
+Special Methods
+------------------
+mylist = [1,2,3]
+len(mylist)
+3
+
+class Sample():
+	pass
+
+sample1 = Sample()
+list = [sample1]
+len(list)
+Traceback error...
+
+
+class Book():
+	def __init__(self, title,author,pages):
+		self.title = title
+		self.author = author
+		self.pages = pages
+
+book1 = Book('Python Rocks!', 'Jose', 200)
+print(book1)
+<__main__Book.........> i.e. the default message with address of the Book1 object
+
+
+
+class Book():
+	def __init__(self, title,author,pages):
+		self.title = title
+		self.author = author
+		self.pages = pages
+		
+	# special method like toString in java
+	def __str__(self):
+		return f"{self.title} by {self.author}"
+
+	# special method to use len() on this object. i.e. len(book1)
+	def __len__(self):
+		return self.pages
+		
+	# special method to do something during deleting of any object of this class
+	def __del__(self): 
+		print('A book object has been deleted')
+
+book1 = Book('Python Rocks!', 'Jose', 200)
+print(book1)
+Python Rocks! by Jose
+
+len(book1)
+200
+
+# delete the books1 object from memory. __del__ will get invoked during deletion
+del book1
+
+
+Python Modules and Packages
+============================
+- PyPI is a repository for open-source 3rd party python packages
+- Its similar to RubyGem is Rubby, NPM for Node.js, maven for java
+- few standard libraries come along with python vanilla installation. ex: Math package.
+- use pip install to install any other 3rd party packages.
+- by installing Python from python.org or through the Anaconda distro. we also insall pip
+- pip is a simple way to download packages at your command line directly from PyPI repo.
+- ex: few open source packages like jango/flask for web development in python
+- google for any usecase, you get either the PyPI page or the 3rd party package page for detail documentation.
+
+How to install any package:
+---------------------------
+lets try to install a very useful package called 'requests' to get details from
+URI
+
+windows command prompt
+
+> pip install requests
+if already installed, Requirement aleady satisfied
+
+> pip install coloroma
+installed
+
+> python
+>>> from coloroma import init
+>>> init()
+>>> from coloroam import Fore
+>>> print(Fore.RED + "some red text")
+>> 
+
+lets use some excel package
+Google search 'python package for excel'
+
+python-excel.org
+
+go to documentation or download, it will take you to pypi official site for compete guidance
+
+> pip install openpyxl
+
+> python
+>>> import openpyxl
+>>> 
+
+How to create our own Modules and Packages
+--------------------------------------------
+- Modules are just .py scripts that we call from another .py scripts
+- Packages are a collection of modules
+- There is a .py script: __init__.py that needs to placed inside a folder to let python know that the collection of .py scripts should be treated as an entire package.
+
+- we can't use jupyter notebook i  order to create modules/packages instead use some text editor like, sublime text editor.
+
+import a function from a module.
+------------------------------------
+in the same folder
+
+- mymodule.py
+def my_func_in_module():
+	prunt('I am in mymodule.py')
+
+- myprog.py
+from mymodule import my_func_in_module
+my_func_in_module()
+
+> python myprog.py
+
+I am in mymodule.py
+
+OR	
+- myprog.py
+from mymodule
+mymodule.my_func_in_module()
+
+# so we can call a function from another python file using modules.
+
+how to create a package and sub packages
+-------------------------------------------
+- MyMainPackage
+	- __init__.py # empty file. this tell python that this is not a directory but a package
+	- mainScript.py
+- MySubPackage
+	- __init__.py # empty file
+	- subScript.py
+- myprog.py (to use this package)
+	
+- subScript.py
+def sub_report():
+	print('I am in subScript.py of MySubPackage')
+	
+- mainScript.py
+def main_report():
+	print('I am in mainScript.py of MyMainPackage')
+
+
+- myprog.py # import from package
+from MyMainPackage import mainScript
+from MyMainPackage.MySubPackage import subScript
+
+mainScript.main_report()
+subScript.sub_report()
+
+I am in mainScript.py of MyMainPackage
+I am in subScript.py of MySubPackage
+
+__name__ and __main__
+========================
+often we see this below line.
+if __name__ == "__main__":
+
+- sometime whe we are impoting from a module, we want to know whether a modules function is been used as import or if we are using original .py file of that module.
+
+create 2 py file in the same folder
+- one.py
+- two.py
+
+Note: when we call a python script from command line, all of the code that is in indentation level 0 gets run.
+
+i.e. 
+all print(), functions, classes at indentation level 0 gets executed.
+
+- unlike other prog lang, there is no main function gets imvoked when we run a file instead all the code at indentation level 0 gets executed.
+- in python, there is a built-in variable called __name__ which gets assigned a string depending on how we run a script.
+- if we run the script directly via python one.py, __name__ gets assigned with "__main__"
+
+- often we see this below line at the end of the script, then run a bunch of functions. so we can organize the order of execution of functions/classes ect which has been defined at identation level 0
+ex:
+
+- test.py
+print('test')
+def func():
+	pass
+class Sample():
+	__init__(self):
+		print('init of Sample')
+	def greet():
+		print('good morning!!!')
+
+if __name__ == "__main__":
+	sample1 = Sample()
+	sample.greet()
+	func()
+
+
+>> python test.py
+
+Example:
+- one.py
+def func():
+	print('FUNC() IN ONE.PY')
+
+print('TOP LEVL IN ONE.PY')
+
+if __name__ == "__main__":
+	print('ONE.PY is being run directly! via command prompt')
+else:
+	print('ONE.PY has been imported')
+	
+- two.py
+import one
+
+print('TOP LEVEL IN TWO.PY')
+one.func()
+
+if __name__ == "__main__":
+	print('TWO.PY is being run directly! via command prompt')
+else:
+	print('TWO.PY has been imported')
+	
+
+> python one.py
+TOP LEVL IN ONE.PY
+ONE.PY is being run directly! via command prompt
+
+> python two.py
+TOP LEVL IN ONE.PY
+ONE.PY has been imported
+TOP LEVEL IN TWO.PY
+FUNC() IN ONE.PY
+TWO.PY is being run directly! via command prompt
+
+
+Errors and Exceptions
+======================
+try, except, finally
+-----------------------
+try:
+	result = 10 + 10
+except:
+	# if the code inside try fails, execute code inside except block
+	print('looks like something went wrong!!')
+else:
+	# if the code inside try success, execute code inside else block
+	print('add operation completed successfully')
+	print(result)
+	
+add operation completed successfully
+20
+
+try:
+	result = 10 + '10'
+except:
+	# if the code inside try fails, execute code inside except block
+	print('looks like something went wrong!!')
+else:
+	# if the code inside try success, execute code inside else block
+	print('add operation completed successfully')
+	print(result)
+
+looks like something went wrong!!
+
+try:
+	f = open('testfile.txt', 'w')
+	f.write('write a test line')
+except TypeError:
+	print('There is a type error')
+except OSError: # in case we dont have permission a file we are trying to write to
+	print('There is an OS error')
+finally:
+	print('I always run')
+
+
+
+def ask_for_int():
+	while True:
+		try:
+			result = int(input('Please provide an integer: '))
+		except:
+			# if the code inside try fails, execute code inside except block
+			print('looks like you did not provided an integer. pls try again')
+			continue
+		else:
+			# if the code inside try success, execute code inside else block
+			print('Yes Thank you...')
+		finally:
+			print('I always run. end of try/except/finally')
+
+Testing Python
+=================
+
+several testig tools available.
+- pylint: This is a lib that looks at your code and reports possible issues.
+may be styling (code style convention know as 'PEP 8') or invalid coce etc..
+- unittest: this built-in lib will allow you to test your own code and check you are getting desired outputs
+
+pylint
+--------
+
+opne windows command prompt.
+
+> pip install pylint (comes along with anaconda)
+
+- simple1.py
+a = 1
+b = 2
+print(a)
+print(B)
+
+> pylint simple1.py
+
+shows a report.
+- first block show the error. with E in the begining of the line.
+- stats of how many functions/class ect.
+- no. of dup lines.
+- no of warnings/errors etc.
+- at the end it also gives a global score on a scale of 10 ex: -12.5/10
+
+- simple1.py
+'''
+a test simple script
+'''
+
+def myfunc():
+	'''
+		a simple function
+	'''
+	first = 1
+	second = 2
+	print(first)
+	print(second)
+	
+myfunc()
+
+> pylint simple1.py
+
+unittest
+-----------
+
+
+Collections Modules
+=====================
+counter
+--------
+- a sub-class of dictionary which helps count hashable objects.
+
+from collections import Counter
+list1 = [1,1,1,1,1,1,12,2,2,3,3,3,4,4,4,5]
+
+Counter(list1)
+Counter({2:5, 1:4, 4:4, ....})
+
+s = "Hi I am sandip"
+words = s.split()
+Counter(words)
+Counter({'Hi':1, 'I':1, 'am': 1, 'sandip':1})
+
+c = Counter({'Hi':1, 'I':1, 'am': 1, 'sandip':1})
+c.most_common(2)
+
+sum(c.values()) # total of all counts()
+c.clear() # reset all counts
+list(c) # list unique elements
+set(c) # convert to set
+dict(c) # convert to regular dictionary
+c.items() # convert to a list of (elem, count) pairs
+Counter(dict(list_of_pairs)) # inverse of c.items()
+
+defaultdict
+------------
+- dicyionary like object which provides al methods provided by dictionary but takes firts argument (default_factory) as default data type for the dictionary.
+Using defaultdict is faster than doing the same using dict.set_default method.
+
+- defaultdict will never raise a KeyError (trying to access a key which does not exists), any key that does not exist gets the value set by the default factory (during creation of defaultdict)
+
+syntax:
+dd = defaultdict(<a lambda for the default_factory>)
+
+from collections import defaultdict
+
+d = ('k1':1)
+d['k1']
+1
+
+d['k2']
+KeyError.....
+
+dd = defaultdict(object)
+dd['one']
+
+will not give any error, if the key does not exists.
+
+dd = defaultdict(lambda: 0)
+dd['one']
+0
+
+dd['two'] = 2
+
+
+OrderedDict
+------------
+- subclass of dictionary but keeps the order of insertion.
+
+d = {}
+d['a'] = 1
+d['b'] = 2
+d['c'] = 3
+d['d'] = 4
+d['e'] = 5
+
+d
+{'a':1, 'b':2, 'c':3, 'd':4, 'e':5}
+
+for k,v in d.items():
+	print k,v
+	
+a 1
+c 3
+b 2
+e 5
+d 4
+
+from collections import OrderedDict
+d = OrderedDict()
+d['a'] = 1
+d['b'] = 2
+d['c'] = 3
+d['d'] = 4
+d['e'] = 5
+
+for k,v in d.items():
+	print k,v
+
+a 1
+b 2
+c 3
+d 4
+e 5
+
+namedtuple
+------------
+- assigns a name to each tuple items
+- similar to case class in scala or creating a class in python
+- 1st arg: is the name of the tuple, 2nd arg: attributes name space separated.
+
+t = (1,2,3)
+t[0]
+1
+
+from collections import namedtuple
+
+Dog = namedtuple('Dog', 'age breed name')
+
+dog1 = Dog(age=2, breed='Lab', name='Sammy')
+dog1.age
+2
+dog1[0]
+2
+
+
+Datetime module
+================
+- deal with date time timezone etc.
+- datetime.date
+- datetime.time
+
+
+import datetime
+
+t = datetime.time(5,25,1)
+print (t)
+05:25:01
+
+t.hour
+t.minute
+
+print(datetime.time.max)
+23:59:59.999999
+
+print(datetime.time.min)
+00:00:00.000000
+
+today = datetime.date.today()
+print(today)
+2020-05-26  # yyyy-MM-dd
+
+today.timetuple()
+
+today.day
+
+d1 = datetime.date(2020, 05, 15)
+print(d1)
+2020-05-15
+
+d2 = d1.replace(year=2019)
+2019-05-15
+
+
+Python debugger module (pdb)
+================================
+
+import pdb
+
+x = [1,3,4]
+y = 2
+z = 3
+
+result = y + z  # works fine since adding int to int
+print(result)
+
+result2 = y + x  # intentionally added an error since ading int to list
+print(result2)
+
+TypeError traceback.... due to trying to add int to list.
+
+now add the pdb line.
+
+
+import pdb
+
+x = [1,3,4]
+y = 2
+z = 3
+
+result = y + z  # works fine since adding int to int
+print(result)
+
+pdb.set_trace() # on the running the code again, at this line python will open a debugger console and ask for use input where we can check the values of each variable.
+
+result2 = y + x  # intentionally added an error since ading int to list
+print(result2)
+
+
+Timing your code (timeit module)
+==================================
+- to capture time taken of our piece of code.
+
+import timeit
+
+"-".join(str(n) for n in range(100))
+'0-1-2-3-4-5-......-98-99'
+
+
+timeit.timeit(' "-".join(str(n) for n in range(100)) ', number=10000)
+0.247889
+
+timeit.timeit(' "-".join(map(str, range(100)))) ', number=10000)
+0.156899202
+
+StringIO module
+=================
+- The StringIO module implements an in-memory file like object.
+- the object can then be used an input or output to most functions that would expect a standard file object.
+
+import StringIO
+
+message = 'This is just a normal string.'
+
+f = StringIO.StringIO(message)
+# now we have an object f that we will be able to treat jist like a file. for example:
+
+f.read()
+
+# we can also write to it.
+f.write(' Second like written to file like file object')
+
+# seek to the begining of the string
+f.seek(0)
+
+# read again
+f.read()
+
+
+Advanced Strings
+==================
+s = 'hello world'
+
+# capitalize each word's first char
+s.capitalize()
+
+s.upper()
+
+s.lower()
+
+s.count('o')
+2
+
+s.find('0')
+4
+
+s.center(20, 'z')
+'zzzzzhello worldzzzzz'
+
+s.islower()
+
+s.isspace()
+
+s.endswith('o')
+
+s = 'hello'
+s.split('e')
+['h', 'llo']
+
+s.partition('i')
+
+
+Advanced Sets
+================
+s = set(1)
+s.add(2)
+s
+>{1,2}
+
+s.clear()
+s
+>set()
+
+
+s = {1,2,3}
+sc = c.copy()
+sc
+> {1,2,3}
+
+a.add(4)
+s
+> {1,2,3,4}
+sc
+> {1,2,3}
+
+# just return the difference but does not update the set
+s.difference(sc)
+> {4}
+
+s1 = {1,2,3}
+s2 = {1,4,5}
+# update the 1st set after removing the elements of 2nd set
+s1.difference_update(s2)
+s1
+> {2,3}
+
+# removed the element from the set if found, if not found does nothing
+s.discard(2)
+>{1,3,4}
+
+s1 = {1,2,3}
+s2 = {1,2,4}
+# returns a set after doing the intersection
+s1.intersection(s2)
+> {1,2}
+
+s1
+> {1,2,3}
+
+# 
+s1.intersection_update(s2)
+
+# True/False if s1 is a subset of s2
+s1.issubset(s2)
+
+# True/False if s2 is super set of s1
+s2.issuperset(s1)
+
+# return the union of the 2 sets
+s1.union(s2)
+{1,2,3,4}
+
+# inline update s1 with elements of s2
+s1.update(s2)
+
+
+Advanced Dictionary
+=======================
+d = {'k1':1, 'k2':2}
+
+for k in d.iterkeys():
+	print(k)
+	
+k1
+k2
+
+for k in d.itervalues():
+	print(k)
+	
+1
+2
+
+
+d.viewitems()
+>dict_items([(k1,1),(k2,2)])
+
+d.viewkeys()
+
+d.viewvalues()
+
+Advanced Lists
+================
+l = [1,2,3]
+l.append(4)
+>[1,2,3,4]
+
+l.append([4,5])
+
+x = [1,2,3]
+x.append([4,5])
+print(x)
+> [1, 2, 3, [4,5]]
+
+extend()
+-----------
+x = [1,2,3]
+x.extend([4,5])
+print(x)
+> [1, 2, 3, 4, 5]
+
+index()
+--------
+x.index(4)
+3
+
+x.index(10)
+ValueError..
+
+insert()
+---------
+x.insert(2, 'inserted')
+print(x)
+[1, 2, 'inserted', 3, 4, 5]
+
+pop() - by default it removes inline the last element, to remove by index pass the index.
+----------------------------------------------
+x.pop(0)
+[2, 'inserted', 3, 4, 5]
+
+remove() - inline remove the value (1st occurence)
+-----------------------------------------------
+x.remove('inserted')
+[2, 3, 4, 5]
+
+
