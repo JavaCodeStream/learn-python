@@ -1,0 +1,176 @@
+https://realpython.com/python-json/
+
+Working With JSON Data in Python
+====================================================================
+{
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "hobbies": ["running", "sky diving", "singing"],
+    "age": 35,
+    "children": [
+        {
+            "firstName": "Alice",
+            "age": 6
+        },
+        {
+            "firstName": "Bob",
+            "age": 8
+        }
+    ]
+}
+
+Python comes with a built-in package called json for encoding and decoding JSON data.
+
+import json
+
+json serialization
+-----------------------------------------------------------------
+- The process of encoding JSON is usually called serialization. This term refers to the transformation of data into a series of bytes (hence serial) to be stored or transmitted across a network. 
+
+json deserialization
+-----------------------------------------------------------------
+- deserialization is the reciprocal process of decoding data that has been stored or delivered in the JSON standard.
+
+Serializing JSON
+===========================================================================
+
+What happens after a computer processes lots of information? It needs to take a data dump. Accordingly, the json library exposes the dump() method for writing data to files. 
+
+Simple Python objects are translated to JSON according to a fairly intuitive conversion.
+
+Python				JSON
+dict				object
+list, tuple			array
+str					string
+int, long, float	number
+True				true
+False				false
+None				null
+
+
+A Simple Serialization Example
+--------------------------------------------------------------------------
+.dump() and .dumps() method
+--------------------------------------------------------------------------
+data = {
+    "president": {
+        "name": "Zaphod Beeblebrox",
+        "species": "Betelgeusian"
+    }
+}
+
+write_file = open("data_file.json", "w")
+json.dump(data, write_file)
+
+Note that dump() takes two positional arguments: 
+(1) the data object to be serialized, and 
+(2) the file-like object to which the bytes will be written.
+
+.dumps()
+---------------------------------------------------------------------------
+write the json data into native python str
+
+json_string = json.dumps(data)
+
+'{"president": {"name": "Zaphod Beeblebrox", "species": "Betelgeusian"}}'
+
+
+Deserializing JSON
+===========================================================================
+load() and loads() for turning JSON encoded data into Python objects.
+----------------------------------------------------------------------------
+
+A Simple Deserialization Example
+---------------------------------------------------------------------------
+- data stored on disk that you’d like to manipulate in memory. 
+- In most cases, the root object will be a dict or a list.
+
+read_file = open("data_file.json", "r")
+data = json.load(read_file)
+
+
+- you can easily deserialize that with loads(), which naturally loads from a string:
+
+json_string = """
+{
+    "researcher": {
+        "name": "Ford Prefect",
+        "species": "Betelgeusian",
+        "relatives": [
+            {
+                "name": "Zaphod Beeblebrox",
+                "species": "Betelgeusian"
+            }
+        ]
+    }
+}
+"""
+data = json.loads(json_string)
+type(data)
+
+dict
+
+
+
+A Real World Example (sort of)
+===========================================================================
+For your introductory example, you’ll use JSONPlaceholder, a great source of fake JSON data for practice purposes.
+
+import json
+import requests
+
+response = requests.get("https://jsonplaceholder.typicode.com/todos")
+todos = json.loads(response.text)
+
+todos == response.json()
+True
+
+type(todos)
+<class 'list'>
+
+All right, time for some action. You can see the structure of the data by visiting the endpoint in a browser, but here’s a sample TODO:
+
+{
+    "userId": 1,
+    "id": 1,
+    "title": "delectus aut autem",
+    "completed": false
+}
+
+Assignnments - 1
+There are multiple users, each with a unique userId, and each task has a Boolean completed property. Can you determine which users have completed the most tasks?
+
+
+# Map of userId to number of complete TODOs for that user
+todos_by_user = {}
+
+# Increment complete TODOs count for each user.
+for todo in todos:
+    if todo["completed"]:
+        try:
+            # Increment the existing user's count.
+            todos_by_user[todo["userId"]] += 1
+        except KeyError:
+            # This user has not been seen. Set their count to 1.
+            todos_by_user[todo["userId"]] = 1
+
+# Create a sorted list of (userId, num_complete) pairs.
+top_users = sorted(todos_by_user.items(), 
+                   key=lambda x: x[1], reverse=True)
+
+# Get the maximum number of complete TODOs.
+max_complete = top_users[0][1]
+
+# Create a list of all users who have completed
+# the maximum number of TODOs.
+users = []
+for user, num_complete in top_users:
+    if num_complete < max_complete:
+        break
+    users.append(str(user))
+
+max_users = " and ".join(users)
+
+
+
+
